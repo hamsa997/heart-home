@@ -24,7 +24,24 @@ export default function PetListing() {
       const matchesSearch = pet.name.toLowerCase().includes(search.toLowerCase()) || 
                            pet.breed.toLowerCase().includes(search.toLowerCase());
       const matchesSpecies = species === "all" || pet.species.toLowerCase() === species.toLowerCase();
-      const matchesAge = age === "all" || pet.age.toLowerCase().includes(age.toLowerCase());
+      
+      let matchesAge = true;
+      if (age !== "all") {
+        const petAgeLower = pet.age.toLowerCase();
+        if (age === "younger") {
+          // Matches kittens, puppies, or 1 year olds
+          matchesAge = petAgeLower.includes("kitten") || 
+                       petAgeLower.includes("puppy") || 
+                       petAgeLower.includes("1 year") ||
+                       petAgeLower.includes("month");
+        } else if (age === "adult") {
+          // Matches 2+ years or explicitly "adult" or "senior"
+          const isOneYear = petAgeLower.includes("1 year");
+          matchesAge = (petAgeLower.includes("year") && !isOneYear) || 
+                       petAgeLower.includes("adult") || 
+                       petAgeLower.includes("senior");
+        }
+      }
       
       return matchesSearch && matchesSpecies && matchesAge;
     });
@@ -73,9 +90,8 @@ export default function PetListing() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Any Age</SelectItem>
-                  <SelectItem value="year">Adult</SelectItem>
-                  <SelectItem value="young">Young</SelectItem>
-                  <SelectItem value="senior">Senior</SelectItem>
+                  <SelectItem value="younger">Younger</SelectItem>
+                  <SelectItem value="adult">Adult</SelectItem>
                 </SelectContent>
               </Select>
             </div>
