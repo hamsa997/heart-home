@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use, useState } from "react";
@@ -12,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AdoptionForm } from "@/components/AdoptionForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { getPetImageUrl } from "@/lib/utils";
 
 export default function PetDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -23,7 +23,8 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
   }
 
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
-  const imageHint = pet.species === "Dog" ? "cartoon dog" : "cartoon cat";
+  const imageHint = `cartoon ${pet.species.toLowerCase()}`;
+  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -40,7 +41,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
           <div className="lg:col-span-2 space-y-8">
             <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
               <Image 
-                src={pet.imageUrl}
+                src={dynamicImageUrl}
                 alt={pet.name}
                 fill
                 className="object-cover"

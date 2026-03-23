@@ -16,6 +16,7 @@ import { Plus, Edit, Trash2, Search, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { getPetImageUrl } from "@/lib/utils";
 
 export default function AdminPets() {
   return (
@@ -57,38 +58,42 @@ export default function AdminPets() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {INITIAL_PETS.map((pet) => (
-                <TableRow key={pet.id} className="hover:bg-muted/5 transition-colors">
-                  <TableCell>
-                    <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-lg overflow-hidden border border-border">
-                      <Image 
-                        src={pet.imageUrl} 
-                        alt={pet.name} 
-                        fill 
-                        className="object-cover" 
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-bold text-foreground">{pet.name}</TableCell>
-                  <TableCell>{pet.species}</TableCell>
-                  <TableCell className="hidden md:table-cell">{pet.breed}</TableCell>
-                  <TableCell>
-                    <Badge variant={pet.status === "Available" ? "default" : "secondary"} className={pet.status === "Available" ? "bg-accent/20 text-accent hover:bg-accent/20 border-none text-[10px] md:text-xs" : "bg-muted text-muted-foreground border-none text-[10px] md:text-xs"}>
-                      {pet.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1 md:gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {INITIAL_PETS.map((pet) => {
+                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+                return (
+                  <TableRow key={pet.id} className="hover:bg-muted/5 transition-colors">
+                    <TableCell>
+                      <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-lg overflow-hidden border border-border">
+                        <Image 
+                          src={dynamicImageUrl} 
+                          alt={pet.name} 
+                          fill 
+                          className="object-cover" 
+                          data-ai-hint={`cartoon ${pet.species.toLowerCase()}`}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-bold text-foreground">{pet.name}</TableCell>
+                    <TableCell>{pet.species}</TableCell>
+                    <TableCell className="hidden md:table-cell">{pet.breed}</TableCell>
+                    <TableCell>
+                      <Badge variant={pet.status === "Available" ? "default" : "secondary"} className={pet.status === "Available" ? "bg-accent/20 text-accent hover:bg-accent/20 border-none text-[10px] md:text-xs" : "bg-muted text-muted-foreground border-none text-[10px] md:text-xs"}>
+                        {pet.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1 md:gap-2">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>

@@ -1,10 +1,10 @@
-
 import { Pet } from "@/app/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { MapPin, Heart, ArrowRight, Dog, Cat } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getPetImageUrl } from "@/lib/utils";
 
 interface PetCardProps {
   pet: Pet;
@@ -12,14 +12,15 @@ interface PetCardProps {
 
 export function PetCard({ pet }: PetCardProps) {
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
-  const imageHint = pet.species === "Dog" ? "cartoon dog" : "cartoon cat";
+  const imageHint = `cartoon ${pet.species.toLowerCase()}`;
+  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
 
   return (
     <Link href={`/pets/${pet.id}`}>
       <Card className="group overflow-hidden border-border bg-white hover:shadow-xl transition-all duration-300 rounded-2xl h-full flex flex-col">
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image 
-            src={pet.imageUrl}
+            src={dynamicImageUrl}
             alt={pet.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"

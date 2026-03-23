@@ -5,6 +5,7 @@ import { INITIAL_PETS, INITIAL_APPLICATIONS } from "@/app/lib/mock-data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PawPrint, Users, Heart, Clock } from "lucide-react";
 import Image from "next/image";
+import { getPetImageUrl } from "@/lib/utils";
 
 export default function AdminDashboard() {
   const [mounted, setMounted] = useState(false);
@@ -79,23 +80,27 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
              <div className="space-y-4">
-              {INITIAL_PETS.slice(0, 3).map(pet => (
-                <div key={pet.id} className="flex items-center gap-3 md:gap-4 p-3 md:p-4 bg-muted/30 rounded-xl">
-                  <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-lg overflow-hidden shrink-0">
-                    <Image 
-                      src={pet.imageUrl} 
-                      alt={pet.name} 
-                      fill 
-                      className="object-cover" 
-                    />
+              {INITIAL_PETS.slice(0, 3).map(pet => {
+                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+                return (
+                  <div key={pet.id} className="flex items-center gap-3 md:gap-4 p-3 md:p-4 bg-muted/30 rounded-xl">
+                    <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-lg overflow-hidden shrink-0">
+                      <Image 
+                        src={dynamicImageUrl} 
+                        alt={pet.name} 
+                        fill 
+                        className="object-cover" 
+                        data-ai-hint={`cartoon ${pet.species.toLowerCase()}`}
+                      />
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <p className="font-bold truncate">{pet.name}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground truncate">{pet.species} • {pet.breed}</p>
+                    </div>
+                    <span className="text-[10px] md:text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold shrink-0">{pet.status}</span>
                   </div>
-                  <div className="flex-grow min-w-0">
-                    <p className="font-bold truncate">{pet.name}</p>
-                    <p className="text-xs md:text-sm text-muted-foreground truncate">{pet.species} • {pet.breed}</p>
-                  </div>
-                  <span className="text-[10px] md:text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold shrink-0">{pet.status}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
