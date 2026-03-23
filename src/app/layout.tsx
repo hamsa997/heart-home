@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'AdoptMe | Online Pet Adoption',
-  description: 'Find your perfect companion through AdoptMe. Professional pet adoption made simple.',
+  title: 'HeartHome | Find Your Forever Companion',
+  description: 'HeartHome connects lonely paws with loving hearts. Experience a heartfelt journey to pet adoption.',
 };
 
 export default function RootLayout({
