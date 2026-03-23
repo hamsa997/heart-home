@@ -1,4 +1,4 @@
-import { ImagePlaceholder, PlaceHolderImages } from "./placeholder-images";
+import { PlaceHolderImages } from "./placeholder-images";
 
 export type PetStatus = "Available" | "Pending" | "Adopted";
 
@@ -69,38 +69,22 @@ export const INITIAL_PETS: Pet[] = [
   },
   {
     id: "3",
-    name: "Thumper",
-    species: "Rabbit",
-    breed: "Holland Lop",
-    age: "1 year",
+    name: "Milo",
+    species: "Cat",
+    breed: "Maine Coon",
+    age: "4 years",
     gender: "Male",
-    size: "Small",
+    size: "Large",
     location: "City Shelter",
-    description: "Thumper is a curious little rabbit with a big personality. He enjoys exploring his surroundings and is quite social for a bunny. He needs plenty of hay and space to hop around.",
-    personalityTraits: ["Curious", "Social", "Active"],
-    likes: ["Carrots", "Fresh hay", "Cardboard boxes"],
-    dislikes: ["Being picked up suddenly"],
+    description: "Milo is a majestic Maine Coon with a heart as big as his paws. He's incredibly affectionate and enjoys being around people.",
+    personalityTraits: ["Gentle Giant", "Affectionate", "Calm"],
+    likes: ["Head scratches", "Large cat trees", "Grooming"],
+    dislikes: ["Small spaces"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "rabbit-1")?.imageUrl || "https://picsum.photos/seed/rabbit1/600/400"
+    imageUrl: images.find(img => img.id === "cat-2")?.imageUrl || "https://picsum.photos/seed/cat2/600/400"
   },
   {
     id: "4",
-    name: "Rio",
-    species: "Bird",
-    breed: "Blue-and-Gold Macaw",
-    age: "5 years",
-    gender: "Male",
-    size: "Medium",
-    location: "Avian Rescue",
-    description: "Rio is a vibrant and intelligent macaw. He can whistle several tunes and is very responsive to human interaction. Macaws are a long-term commitment and require experienced owners.",
-    personalityTraits: ["Intelligent", "Vocal", "Social"],
-    likes: ["Nuts", "Mirror toys", "Whistling"],
-    dislikes: ["Drafty areas"],
-    status: "Available",
-    imageUrl: images.find(img => img.id === "bird-1")?.imageUrl || "https://picsum.photos/seed/bird1/600/400"
-  },
-  {
-    id: "5",
     name: "Bella",
     species: "Dog",
     breed: "Border Collie",
@@ -112,7 +96,7 @@ export const INITIAL_PETS: Pet[] = [
     personalityTraits: ["Smart", "Attentive", "Focused"],
     likes: ["Training", "Frisbee", "Long walks"],
     dislikes: ["Boredom"],
-    status: "Pending",
+    status: "Available",
     imageUrl: images.find(img => img.id === "dog-2")?.imageUrl || "https://picsum.photos/seed/dog2/600/400"
   }
 ];

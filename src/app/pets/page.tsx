@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useState, useMemo } from "react";
 import { Navigation } from "@/components/Navigation";
-import { INITIAL_PETS, Pet } from "@/app/lib/mock-data";
+import { INITIAL_PETS } from "@/app/lib/mock-data";
 import { PetCard } from "@/components/PetCard";
 import { Input } from "@/components/ui/input";
 import { Search, Filter, SlidersHorizontal } from "lucide-react";
@@ -63,8 +62,6 @@ export default function PetListing() {
                   <SelectItem value="all">All Species</SelectItem>
                   <SelectItem value="dog">Dogs</SelectItem>
                   <SelectItem value="cat">Cats</SelectItem>
-                  <SelectItem value="rabbit">Rabbits</SelectItem>
-                  <SelectItem value="bird">Birds</SelectItem>
                 </SelectContent>
               </Select>
             </div>

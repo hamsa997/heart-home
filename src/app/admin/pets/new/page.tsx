@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -32,7 +31,7 @@ import { generatePetDescription } from "@/ai/flows/generate-pet-description";
 
 const petFormSchema = z.object({
   name: z.string().min(2),
-  species: z.string().min(1),
+  species: z.enum(["dog", "cat"]),
   breed: z.string().optional(),
   age: z.string().min(1),
   gender: z.string().min(1),
@@ -160,9 +159,6 @@ export default function NewPetPage() {
                       <SelectContent>
                         <SelectItem value="dog">Dog</SelectItem>
                         <SelectItem value="cat">Cat</SelectItem>
-                        <SelectItem value="rabbit">Rabbit</SelectItem>
-                        <SelectItem value="bird">Bird</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

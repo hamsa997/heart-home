@@ -12,7 +12,7 @@ import { z } from 'genkit';
 
 const GeneratePetDescriptionInputSchema = z.object({
   name: z.string().describe('The name of the pet.'),
-  species: z.string().describe('The species of the pet (e.g., dog, cat, bird).'),
+  species: z.enum(["dog", "cat"]).describe('The species of the pet (dog or cat).'),
   breed: z.string().optional().describe('The breed of the pet (e.g., Golden Retriever, Siamese).'),
   age: z.string().describe('The age of the pet (e.g., 2 years, kitten, senior).'),
   gender: z.string().describe('The gender of the pet (e.g., male, female, unknown).'),
