@@ -27,7 +27,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-lg h-16 px-10 rounded-full shadow-2xl shadow-primary/30 transition-all hover:scale-105">
                   <Link href="/pets" className="flex items-center gap-2">
-                    Meet Your Soulmate
+                    Meet Your Forever Buddy
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="border-2 text-lg h-16 px-10 rounded-full hover:bg-primary/5">
