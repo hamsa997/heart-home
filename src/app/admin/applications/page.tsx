@@ -1,6 +1,6 @@
-
 "use client";
 
+import { useEffect, useState } from "react";
 import { INITIAL_APPLICATIONS } from "@/app/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,10 +13,21 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, Eye, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Search, Eye, CheckCircle, XCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 export default function AdminApplications() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    if (!mounted) return "...";
+    return new Date(dateString).toLocaleDateString();
+  };
+
   return (
     <div className="space-y-8">
       <header className="space-y-1">
@@ -41,9 +52,9 @@ export default function AdminApplications() {
             <div className="text-3xl font-bold font-headline">2</div>
           </CardContent>
         </Card>
-        <Card className="rounded-2xl border-border bg-green-50">
+        <Card className="rounded-2xl border-border bg-primary/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-green-600 uppercase tracking-wider">Approved</CardTitle>
+            <CardTitle className="text-sm font-medium text-primary uppercase tracking-wider">Approved</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold font-headline">8</div>
@@ -86,7 +97,9 @@ export default function AdminApplications() {
                       <span className="font-medium">{app.petName}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm">{new Date(app.submittedAt).toLocaleDateString()}</TableCell>
+                  <TableCell className="text-sm">
+                    {formatDate(app.submittedAt)}
+                  </TableCell>
                   <TableCell>
                     <Badge variant="outline" className="bg-accent/10 text-accent border-none font-bold">
                       {app.status}
@@ -97,7 +110,7 @@ export default function AdminApplications() {
                       <Button variant="ghost" size="sm" className="h-9 px-3 text-primary hover:bg-primary/10">
                         <Eye className="h-4 w-4 mr-2" /> View
                       </Button>
-                      <Button variant="ghost" size="sm" className="h-9 px-3 text-green-600 hover:bg-green-100">
+                      <Button variant="ghost" size="sm" className="h-9 px-3 text-accent hover:bg-accent/10">
                         <CheckCircle className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="sm" className="h-9 px-3 text-destructive hover:bg-destructive/10">

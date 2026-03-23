@@ -31,6 +31,9 @@ export interface Application {
   submittedAt: string;
 }
 
+// Ensure PlaceHolderImages is treated as an array to avoid evaluation errors
+const images = Array.isArray(PlaceHolderImages) ? PlaceHolderImages : [];
+
 export const INITIAL_PETS: Pet[] = [
   {
     id: "1",
@@ -46,7 +49,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Sunbathing", "Salmon treats", "String toys"],
     dislikes: ["Loud vacuums", "Cold floors"],
     status: "Available",
-    imageUrl: (PlaceHolderImages || []).find(img => img.id === "cat-1")?.imageUrl || "https://picsum.photos/seed/cat1/600/400"
+    imageUrl: images.find(img => img.id === "cat-1")?.imageUrl || "https://picsum.photos/seed/cat1/600/400"
   },
   {
     id: "2",
@@ -62,7 +65,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Fetch", "Swimming", "Belly rubs"],
     dislikes: ["Being alone for too long"],
     status: "Available",
-    imageUrl: (PlaceHolderImages || []).find(img => img.id === "dog-1")?.imageUrl || "https://picsum.photos/seed/dog1/600/400"
+    imageUrl: images.find(img => img.id === "dog-1")?.imageUrl || "https://picsum.photos/seed/dog1/600/400"
   },
   {
     id: "3",
@@ -78,7 +81,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Carrots", "Fresh hay", "Cardboard boxes"],
     dislikes: ["Being picked up suddenly"],
     status: "Available",
-    imageUrl: (PlaceHolderImages || []).find(img => img.id === "rabbit-1")?.imageUrl || "https://picsum.photos/seed/rabbit1/600/400"
+    imageUrl: images.find(img => img.id === "rabbit-1")?.imageUrl || "https://picsum.photos/seed/rabbit1/600/400"
   },
   {
     id: "4",
@@ -94,7 +97,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Nuts", "Mirror toys", "Whistling"],
     dislikes: ["Drafty areas"],
     status: "Available",
-    imageUrl: (PlaceHolderImages || []).find(img => img.id === "bird-1")?.imageUrl || "https://picsum.photos/seed/bird1/600/400"
+    imageUrl: images.find(img => img.id === "bird-1")?.imageUrl || "https://picsum.photos/seed/bird1/600/400"
   },
   {
     id: "5",
@@ -110,7 +113,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Training", "Frisbee", "Long walks"],
     dislikes: ["Boredom"],
     status: "Pending",
-    imageUrl: (PlaceHolderImages || []).find(img => img.id === "dog-2")?.imageUrl || "https://picsum.photos/seed/dog2/600/400"
+    imageUrl: images.find(img => img.id === "dog-2")?.imageUrl || "https://picsum.photos/seed/dog2/600/400"
   }
 ];
 

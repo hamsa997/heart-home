@@ -1,4 +1,3 @@
-
 "use client";
 
 import { INITIAL_PETS } from "@/app/lib/mock-data";
@@ -16,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Search, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export default function AdminPets() {
   return (
@@ -58,8 +58,13 @@ export default function AdminPets() {
               {INITIAL_PETS.map((pet) => (
                 <TableRow key={pet.id} className="hover:bg-muted/5 transition-colors">
                   <TableCell>
-                    <div className="w-12 h-12 rounded-lg overflow-hidden border border-border">
-                      <img src={pet.imageUrl} alt={pet.name} className="w-full h-full object-cover" />
+                    <div className="w-12 h-12 relative rounded-lg overflow-hidden border border-border">
+                      <Image 
+                        src={pet.imageUrl} 
+                        alt={pet.name} 
+                        fill 
+                        className="object-cover" 
+                      />
                     </div>
                   </TableCell>
                   <TableCell className="font-bold text-foreground">{pet.name}</TableCell>

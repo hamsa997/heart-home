@@ -1,14 +1,28 @@
+"use client";
 
+import { useEffect, useState } from "react";
 import { INITIAL_PETS, INITIAL_APPLICATIONS } from "@/app/lib/mock-data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PawPrint, Users, Heart, Clock } from "lucide-react";
+import Image from "next/image";
 
 export default function AdminDashboard() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    if (!mounted) return "...";
+    return new Date(dateString).toLocaleDateString();
+  };
+
   const stats = [
-    { title: "Total Pets", value: INITIAL_PETS.length, icon: PawPrint, color: "bg-blue-500" },
-    { title: "Active Applications", value: INITIAL_APPLICATIONS.length, icon: Users, color: "bg-green-500" },
-    { title: "Adoptions This Month", value: "12", icon: Heart, color: "bg-pink-500" },
-    { title: "Pending Reviews", value: "3", icon: Clock, color: "bg-yellow-500" },
+    { title: "Total Pets", value: INITIAL_PETS.length, icon: PawPrint, color: "bg-primary" },
+    { title: "Active Applications", value: INITIAL_APPLICATIONS.length, icon: Users, color: "bg-accent" },
+    { title: "Adoptions This Month", value: "12", icon: Heart, color: "bg-primary" },
+    { title: "Pending Reviews", value: "3", icon: Clock, color: "bg-accent" },
   ];
 
   return (
@@ -48,7 +62,9 @@ export default function AdminDashboard() {
                     <p className="text-sm text-muted-foreground">Applying for <span className="text-primary font-medium">{app.petName}</span></p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-muted-foreground">{new Date(app.submittedAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatDate(app.submittedAt)}
+                    </p>
                     <span className="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full font-bold">New</span>
                   </div>
                 </div>
@@ -66,7 +82,12 @@ export default function AdminDashboard() {
               {INITIAL_PETS.slice(0, 3).map(pet => (
                 <div key={pet.id} className="flex items-center gap-4 p-4 bg-muted/30 rounded-xl">
                   <div className="w-12 h-12 relative rounded-lg overflow-hidden shrink-0">
-                    <img src={pet.imageUrl} alt={pet.name} className="object-cover w-full h-full" />
+                    <Image 
+                      src={pet.imageUrl} 
+                      alt={pet.name} 
+                      fill 
+                      className="object-cover" 
+                    />
                   </div>
                   <div className="flex-grow">
                     <p className="font-bold">{pet.name}</p>
