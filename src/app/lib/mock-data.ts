@@ -49,7 +49,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Sunbathing", "Salmon treats", "String toys"],
     dislikes: ["Loud vacuums", "Cold floors"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "siamese-cat")?.imageUrl || "https://picsum.photos/seed/siamese/600/400"
+    imageUrl: images.find(img => img.id === "generic-cat-1")?.imageUrl || "https://picsum.photos/seed/cat1/600/400"
   },
   {
     id: "2",
@@ -65,7 +65,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Fetch", "Swimming", "Belly rubs"],
     dislikes: ["Being alone for too long"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "golden-retriever")?.imageUrl || "https://picsum.photos/seed/golden/600/400"
+    imageUrl: images.find(img => img.id === "generic-dog-1")?.imageUrl || "https://picsum.photos/seed/dog1/600/400"
   },
   {
     id: "3",
@@ -81,7 +81,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Head scratches", "Large cat trees", "Grooming"],
     dislikes: ["Small spaces"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "maine-coon")?.imageUrl || "https://picsum.photos/seed/mainecoon/600/400"
+    imageUrl: images.find(img => img.id === "generic-cat-2")?.imageUrl || "https://picsum.photos/seed/cat2/600/400"
   },
   {
     id: "4",
@@ -97,7 +97,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Training", "Frisbee", "Long walks"],
     dislikes: ["Boredom"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "border-collie")?.imageUrl || "https://picsum.photos/seed/bordercollie/600/400"
+    imageUrl: images.find(img => img.id === "generic-dog-2")?.imageUrl || "https://picsum.photos/seed/dog2/600/400"
   },
   {
     id: "5",
@@ -113,7 +113,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Laser pointers", "Catnip", "High perches"],
     dislikes: ["Rain", "Closed doors"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "tabby-cat")?.imageUrl || "https://picsum.photos/seed/tabbycat/600/400"
+    imageUrl: images.find(img => img.id === "generic-cat-3")?.imageUrl || "https://picsum.photos/seed/cat3/600/400"
   },
   {
     id: "6",
@@ -129,7 +129,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Tracking scents", "Snuggling", "Car rides"],
     dislikes: ["Thunderstorms", "Being ignored"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "beagle-dog")?.imageUrl || "https://picsum.photos/seed/beagle/600/400"
+    imageUrl: images.find(img => img.id === "generic-dog-3")?.imageUrl || "https://picsum.photos/seed/dog3/600/400"
   },
   {
     id: "7",
@@ -145,7 +145,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Premium food", "Being brushed", "Soft blankets"],
     dislikes: ["Dogs", "Loud music"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "persian-cat")?.imageUrl || "https://picsum.photos/seed/persian/600/400"
+    imageUrl: images.find(img => img.id === "generic-cat-4")?.imageUrl || "https://picsum.photos/seed/cat4/600/400"
   },
   {
     id: "8",
@@ -161,7 +161,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Tennis balls", "Water", "Snacks"],
     dislikes: ["Empty bowls"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "labrador-yellow")?.imageUrl || "https://picsum.photos/seed/lab/600/400"
+    imageUrl: images.find(img => img.id === "generic-dog-4")?.imageUrl || "https://picsum.photos/seed/dog4/600/400"
   }
 ];
 
