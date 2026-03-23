@@ -2,52 +2,52 @@
 {
   "placeholderImages": [
     {
-      "id": "generic-dog-1",
-      "description": "A happy dog in a field",
-      "imageUrl": "https://picsum.photos/seed/dog1/600/400",
-      "imageHint": "happy dog"
+      "id": "pet-luna",
+      "description": "Luna the Siamese Cat",
+      "imageUrl": "https://picsum.photos/seed/luna-cat/600/400",
+      "imageHint": "siamese cat"
     },
     {
-      "id": "generic-dog-2",
-      "description": "A playful dog with a ball",
-      "imageUrl": "https://picsum.photos/seed/dog2/600/400",
-      "imageHint": "playful dog"
+      "id": "pet-cooper",
+      "description": "Cooper the Golden Retriever",
+      "imageUrl": "https://picsum.photos/seed/cooper-dog/600/400",
+      "imageHint": "golden retriever"
     },
     {
-      "id": "generic-dog-3",
-      "description": "A loyal dog sitting calmly",
-      "imageUrl": "https://picsum.photos/seed/dog3/600/400",
-      "imageHint": "sitting dog"
+      "id": "pet-milo",
+      "description": "Milo the Maine Coon Cat",
+      "imageUrl": "https://picsum.photos/seed/milo-cat/600/400",
+      "imageHint": "maine coon"
     },
     {
-      "id": "generic-dog-4",
-      "description": "A curious dog looking at camera",
-      "imageUrl": "https://picsum.photos/seed/dog4/600/400",
-      "imageHint": "curious dog"
+      "id": "pet-bella",
+      "description": "Bella the Border Collie",
+      "imageUrl": "https://picsum.photos/seed/bella-dog/600/400",
+      "imageHint": "border collie"
     },
     {
-      "id": "generic-cat-1",
-      "description": "A fluffy cat lounging in the sun",
-      "imageUrl": "https://picsum.photos/seed/cat1/600/400",
-      "imageHint": "fluffy cat"
+      "id": "pet-oliver",
+      "description": "Oliver the Tabby Cat",
+      "imageUrl": "https://picsum.photos/seed/oliver-cat/600/400",
+      "imageHint": "tabby cat"
     },
     {
-      "id": "generic-cat-2",
-      "description": "An elegant cat with striking eyes",
-      "imageUrl": "https://picsum.photos/seed/cat2/600/400",
-      "imageHint": "elegant cat"
+      "id": "pet-daisy",
+      "description": "Daisy the Beagle",
+      "imageUrl": "https://picsum.photos/seed/daisy-dog/600/400",
+      "imageHint": "beagle dog"
     },
     {
-      "id": "generic-cat-3",
-      "description": "A tiny kitten exploring",
-      "imageUrl": "https://picsum.photos/seed/cat3/600/400",
-      "imageHint": "tiny kitten"
+      "id": "pet-snowball",
+      "description": "Snowball the Persian Cat",
+      "imageUrl": "https://picsum.photos/seed/snowball-cat/600/400",
+      "imageHint": "white cat"
     },
     {
-      "id": "generic-cat-4",
-      "description": "A playful cat chasing a toy",
-      "imageUrl": "https://picsum.photos/seed/cat4/600/400",
-      "imageHint": "playful cat"
+      "id": "pet-rex",
+      "description": "Rex the Labrador",
+      "imageUrl": "https://picsum.photos/seed/rex-dog/600/400",
+      "imageHint": "labrador dog"
     }
   ]
 }
