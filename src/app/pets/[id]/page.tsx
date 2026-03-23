@@ -7,7 +7,7 @@ import { INITIAL_PETS, Pet } from "@/app/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Heart, Info, CheckCircle2, Share2, ArrowLeft } from "lucide-react";
+import { MapPin, Heart, Info, CheckCircle2, Share2, ArrowLeft, Dog, Cat } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { AdoptionForm } from "@/components/AdoptionForm";
@@ -19,8 +19,10 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
   const [isApplicationSent, setIsApplicationSent] = useState(false);
 
   if (!pet) {
-    return <div>Pet not found</div>;
+    return <div className="min-h-screen flex items-center justify-center">Pet not found</div>;
   }
+
+  const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -52,7 +54,12 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
             <div className="space-y-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-2">
-                  <h1 className="text-5xl font-headline font-bold text-foreground">{pet.name}</h1>
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-5xl font-headline font-bold text-foreground">{pet.name}</h1>
+                    <div className="bg-primary/10 p-2 rounded-xl">
+                      <SpeciesIcon className="h-8 w-8 text-primary" />
+                    </div>
+                  </div>
                   <div className="flex items-center gap-4 text-muted-foreground font-medium">
                     <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {pet.location}</span>
                     <span>•</span>
@@ -86,7 +93,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 <h2 className="text-2xl font-headline font-bold flex items-center gap-2">
                   <Info className="h-6 w-6 text-primary" /> About {pet.name}
                 </h2>
-                <div className="text-lg text-muted-foreground leading-relaxed bg-white p-8 rounded-3xl border border-border">
+                <div className="text-lg text-muted-foreground leading-relaxed bg-white p-8 rounded-3xl border border-border whitespace-pre-wrap">
                   {pet.description}
                 </div>
               </div>
