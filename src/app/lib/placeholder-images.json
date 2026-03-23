@@ -1,0 +1,47 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-dog",
+      "description": "Happy dog running in a park",
+      "imageUrl": "https://picsum.photos/seed/dog1/1200/600",
+      "imageHint": "dog happiness"
+    },
+    {
+      "id": "cat-1",
+      "description": "Cute kitten sitting on a sofa",
+      "imageUrl": "https://picsum.photos/seed/cat1/600/400",
+      "imageHint": "cat kitten"
+    },
+    {
+      "id": "dog-1",
+      "description": "Golden Retriever smiling",
+      "imageUrl": "https://picsum.photos/seed/dog2/600/400",
+      "imageHint": "golden retriever"
+    },
+    {
+      "id": "rabbit-1",
+      "description": "Small rabbit eating a carrot",
+      "imageUrl": "https://picsum.photos/seed/rabbit1/600/400",
+      "imageHint": "rabbit pet"
+    },
+    {
+      "id": "bird-1",
+      "description": "Colorful parrot on a branch",
+      "imageUrl": "https://picsum.photos/seed/bird1/600/400",
+      "imageHint": "parrot bird"
+    },
+    {
+      "id": "dog-2",
+      "description": "Border Collie waiting for a ball",
+      "imageUrl": "https://picsum.photos/seed/dog3/600/400",
+      "imageHint": "border collie"
+    },
+    {
+      "id": "cat-2",
+      "description": "Calico cat sleeping",
+      "imageUrl": "https://picsum.photos/seed/cat2/600/400",
+      "imageHint": "sleeping cat"
+    }
+  ]
+}
