@@ -42,6 +42,30 @@
       "description": "Classic tabby cat playing",
       "imageUrl": "https://picsum.photos/seed/tabby-cat/600/400",
       "imageHint": "tabby cat"
+    },
+    {
+      "id": "beagle-dog",
+      "description": "A curious Beagle sniffing the ground",
+      "imageUrl": "https://picsum.photos/seed/beagle-dog/600/400",
+      "imageHint": "beagle dog"
+    },
+    {
+      "id": "persian-cat",
+      "description": "A fluffy white Persian cat lounging",
+      "imageUrl": "https://picsum.photos/seed/persian-cat/600/400",
+      "imageHint": "persian cat"
+    },
+    {
+      "id": "poodle-dog",
+      "description": "An elegant white Poodle in a garden",
+      "imageUrl": "https://picsum.photos/seed/poodle-dog/600/400",
+      "imageHint": "poodle dog"
+    },
+    {
+      "id": "bengal-cat",
+      "description": "A sleek Bengal cat with exotic spots",
+      "imageUrl": "https://picsum.photos/seed/bengal-cat/600/400",
+      "imageHint": "bengal cat"
     }
   ]
 }
