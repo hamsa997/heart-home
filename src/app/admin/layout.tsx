@@ -1,7 +1,7 @@
 "use client";
 
-import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
-import { LayoutDashboard, PawPrint, Users, LogOut, Home, Heart } from "lucide-react";
+import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarTrigger } from "@/components/ui/sidebar";
+import { LayoutDashboard, PawPrint, Users, LogOut, Home, Heart, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,7 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <SidebarProvider>
       <div className="flex h-screen bg-[#fffaf9] w-full overflow-hidden">
         <Sidebar className="border-r border-border bg-white">
-          <SidebarHeader className="p-8 border-b border-border">
+          <SidebarHeader className="p-6 md:p-8 border-b border-border">
             <Link href="/" className="flex items-center gap-2">
               <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/10">
                 <Heart className="h-5 w-5 text-white fill-current" />
@@ -20,7 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="text-xl font-headline font-bold text-primary tracking-tight">Heart<span className="text-accent">Home</span> Admin</span>
             </Link>
           </SidebarHeader>
-          <SidebarContent className="p-6">
+          <SidebarContent className="p-4 md:p-6">
             <SidebarGroup>
               <SidebarGroupLabel className="text-xs uppercase tracking-widest font-bold text-muted-foreground mb-4">Sanctuary Management</SidebarGroupLabel>
               <SidebarMenu className="space-y-2">
@@ -73,9 +73,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </SidebarContent>
         </Sidebar>
         
-        <main className="flex-1 overflow-auto p-12 md:p-16">
-          {children}
-        </main>
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          {/* Mobile Header */}
+          <header className="md:hidden flex items-center h-16 px-6 border-b border-border bg-white sticky top-0 z-30">
+            <SidebarTrigger>
+              <Menu className="h-6 w-6 text-muted-foreground" />
+            </SidebarTrigger>
+            <span className="ml-4 font-headline font-bold text-primary">Admin Panel</span>
+          </header>
+
+          <main className="flex-1 overflow-auto p-6 md:p-12 lg:p-16">
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
     </SidebarProvider>
   );

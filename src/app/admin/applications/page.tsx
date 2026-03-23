@@ -31,51 +31,51 @@ export default function AdminApplications() {
   return (
     <div className="space-y-8">
       <header className="space-y-1">
-        <h1 className="text-3xl font-headline font-bold">Adoption Applications</h1>
-        <p className="text-muted-foreground">Review and process inquiries from prospective owners.</p>
+        <h1 className="text-2xl md:text-3xl font-headline font-bold text-foreground">Adoption Applications</h1>
+        <p className="text-sm md:text-base text-muted-foreground">Review and process inquiries from prospective owners.</p>
       </header>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
         <Card className="rounded-2xl border-border bg-accent/5">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-accent uppercase tracking-wider">New</CardTitle>
+            <CardTitle className="text-[10px] md:text-sm font-medium text-accent uppercase tracking-wider">New</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold font-headline">1</div>
+            <div className="text-2xl md:text-3xl font-bold font-headline">1</div>
           </CardContent>
         </Card>
         <Card className="rounded-2xl border-border bg-primary/5">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-primary uppercase tracking-wider">Reviewing</CardTitle>
+            <CardTitle className="text-[10px] md:text-sm font-medium text-primary uppercase tracking-wider">Reviewing</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold font-headline">2</div>
+            <div className="text-2xl md:text-3xl font-bold font-headline">2</div>
           </CardContent>
         </Card>
         <Card className="rounded-2xl border-border bg-primary/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-primary uppercase tracking-wider">Approved</CardTitle>
+            <CardTitle className="text-[10px] md:text-sm font-medium text-primary uppercase tracking-wider">Approved</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold font-headline">8</div>
+            <div className="text-2xl md:text-3xl font-bold font-headline">8</div>
           </CardContent>
         </Card>
       </div>
 
       <Card className="rounded-2xl border-border shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-border bg-muted/10 flex items-center gap-4">
+        <div className="p-4 border-b border-border bg-muted/10 flex flex-col md:flex-row items-stretch md:items-center gap-4">
           <div className="relative flex-grow">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input placeholder="Filter applications by name or pet..." className="pl-10 h-10 bg-white" />
           </div>
         </div>
-        <CardContent className="p-0">
-          <Table>
+        <CardContent className="p-0 overflow-x-auto">
+          <Table className="min-w-[700px]">
             <TableHeader className="bg-muted/5">
               <TableRow>
                 <TableHead>Applicant</TableHead>
                 <TableHead>Pet Interested In</TableHead>
-                <TableHead>Date Submitted</TableHead>
+                <TableHead className="hidden lg:table-cell">Date Submitted</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -84,36 +84,36 @@ export default function AdminApplications() {
               {INITIAL_APPLICATIONS.map((app) => (
                 <TableRow key={app.id} className="hover:bg-muted/5 transition-colors">
                   <TableCell>
-                    <div className="space-y-0.5">
-                      <p className="font-bold text-foreground">{app.fullName}</p>
-                      <p className="text-xs text-muted-foreground">{app.email}</p>
+                    <div className="space-y-0.5 min-w-0">
+                      <p className="font-bold text-foreground truncate">{app.fullName}</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground truncate">{app.email}</p>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-xs font-bold text-primary">{app.petName[0]}</span>
+                      <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <span className="text-[10px] md:text-xs font-bold text-primary">{app.petName[0]}</span>
                       </div>
-                      <span className="font-medium">{app.petName}</span>
+                      <span className="font-medium truncate">{app.petName}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm">
+                  <TableCell className="text-sm hidden lg:table-cell">
                     {formatDate(app.submittedAt)}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="bg-accent/10 text-accent border-none font-bold">
+                    <Badge variant="outline" className="bg-accent/10 text-accent border-none font-bold text-[10px] md:text-xs">
                       {app.status}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      <Button variant="ghost" size="sm" className="h-9 px-3 text-primary hover:bg-primary/10">
-                        <Eye className="h-4 w-4 mr-2" /> View
+                      <Button variant="ghost" size="sm" className="h-8 md:h-9 px-2 md:px-3 text-primary hover:bg-primary/10">
+                        <Eye className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">View</span>
                       </Button>
-                      <Button variant="ghost" size="sm" className="h-9 px-3 text-accent hover:bg-accent/10">
+                      <Button variant="ghost" size="sm" className="h-8 md:h-9 px-2 text-accent hover:bg-accent/10">
                         <CheckCircle className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" className="h-9 px-3 text-destructive hover:bg-destructive/10">
+                      <Button variant="ghost" size="sm" className="h-8 md:h-9 px-2 text-destructive hover:bg-destructive/10">
                         <XCircle className="h-4 w-4" />
                       </Button>
                     </div>
