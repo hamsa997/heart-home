@@ -4,50 +4,50 @@
     {
       "id": "pet-luna",
       "description": "Luna the Siamese Cat",
-      "imageUrl": "https://picsum.photos/seed/luna-cat/600/400",
-      "imageHint": "siamese cat"
+      "imageUrl": "https://picsum.photos/seed/luna-cartoon-cat/600/400",
+      "imageHint": "cartoon cat"
     },
     {
       "id": "pet-cooper",
       "description": "Cooper the Golden Retriever",
-      "imageUrl": "https://picsum.photos/seed/cooper-dog/600/400",
-      "imageHint": "golden retriever"
+      "imageUrl": "https://picsum.photos/seed/cooper-cartoon-dog/600/400",
+      "imageHint": "cartoon dog"
     },
     {
       "id": "pet-milo",
       "description": "Milo the Maine Coon Cat",
-      "imageUrl": "https://picsum.photos/seed/milo-cat/600/400",
-      "imageHint": "maine coon"
+      "imageUrl": "https://picsum.photos/seed/milo-cartoon-cat/600/400",
+      "imageHint": "cartoon cat"
     },
     {
       "id": "pet-bella",
       "description": "Bella the Border Collie",
-      "imageUrl": "https://picsum.photos/seed/bella-dog/600/400",
-      "imageHint": "border collie"
+      "imageUrl": "https://picsum.photos/seed/bella-cartoon-dog/600/400",
+      "imageHint": "cartoon dog"
     },
     {
       "id": "pet-oliver",
       "description": "Oliver the Tabby Cat",
-      "imageUrl": "https://picsum.photos/seed/oliver-cat/600/400",
-      "imageHint": "tabby cat"
+      "imageUrl": "https://picsum.photos/seed/oliver-cartoon-cat/600/400",
+      "imageHint": "cartoon cat"
     },
     {
       "id": "pet-daisy",
       "description": "Daisy the Beagle",
-      "imageUrl": "https://picsum.photos/seed/daisy-dog/600/400",
-      "imageHint": "beagle dog"
+      "imageUrl": "https://picsum.photos/seed/daisy-cartoon-dog/600/400",
+      "imageHint": "cartoon dog"
     },
     {
       "id": "pet-snowball",
       "description": "Snowball the Persian Cat",
-      "imageUrl": "https://picsum.photos/seed/snowball-cat/600/400",
-      "imageHint": "white cat"
+      "imageUrl": "https://picsum.photos/seed/snowball-cartoon-cat/600/400",
+      "imageHint": "cartoon cat"
     },
     {
       "id": "pet-rex",
       "description": "Rex the Labrador",
-      "imageUrl": "https://picsum.photos/seed/rex-dog/600/400",
-      "imageHint": "labrador dog"
+      "imageUrl": "https://picsum.photos/seed/rex-cartoon-dog/600/400",
+      "imageHint": "cartoon dog"
     }
   ]
 }

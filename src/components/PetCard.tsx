@@ -12,6 +12,7 @@ interface PetCardProps {
 
 export function PetCard({ pet }: PetCardProps) {
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
+  const imageHint = pet.species === "Dog" ? "cartoon dog" : "cartoon cat";
 
   return (
     <Link href={`/pets/${pet.id}`}>
@@ -22,6 +23,7 @@ export function PetCard({ pet }: PetCardProps) {
             alt={pet.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
+            data-ai-hint={imageHint}
           />
           <div className="absolute top-4 left-4 flex gap-2">
             <Badge variant={pet.status === "Available" ? "default" : "secondary"} className={pet.status === "Available" ? "bg-accent hover:bg-accent" : ""}>

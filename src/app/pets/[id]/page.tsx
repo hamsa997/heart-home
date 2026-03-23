@@ -23,6 +23,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
   }
 
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
+  const imageHint = pet.species === "Dog" ? "cartoon dog" : "cartoon cat";
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -43,6 +44,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 alt={pet.name}
                 fill
                 className="object-cover"
+                data-ai-hint={imageHint}
               />
               <div className="absolute top-6 left-6 flex gap-2">
                 <Badge className="bg-white/90 text-primary text-md px-4 py-1.5 shadow-lg backdrop-blur-sm border-none hover:bg-white/90">
