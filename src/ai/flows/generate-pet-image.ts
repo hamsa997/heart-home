@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow to generate realistic and heartwarming pet images.
@@ -12,7 +13,7 @@ import { z } from 'genkit';
 
 const GeneratePetImageInputSchema = z.object({
   species: z.enum(["dog", "cat"]).describe('The species of the pet.'),
-  breed: z.string().optional().describe('The breed of the pet.'),
+  breed: z.string().optional().describe('The specific breed of the pet for a highly accurate portrait.'),
   personalityTraits: z.array(z.string()).optional().describe('Traits to influence the image mood.'),
 });
 export type GeneratePetImageInput = z.infer<typeof GeneratePetImageInputSchema>;
@@ -36,10 +37,12 @@ const generatePetImageFlow = ai.defineFlow(
     const traits = input.personalityTraits?.join(', ') || 'friendly';
     const breedInfo = input.breed ? `${input.breed} ` : '';
     
+    // Prompt refined to be strictly breed-focused and realistic
     const promptText = `A professional, high-quality studio portrait of a ${traits} ${breedInfo}${input.species}. 
-    The lighting should be soft and warm, highlighting the pet's features. 
-    The background should be clean and slightly out of focus. 
-    The pet should look healthy, happy, and endearing, suitable for an adoption profile.`;
+    The portrait must accurately represent the physical characteristics and features of a ${breedInfo}${input.species}.
+    The lighting should be soft and warm, highlighting the pet's unique coat textures and facial expressions. 
+    The background should be clean, minimalist, and slightly out of focus to keep attention on the pet. 
+    The pet should look healthy, happy, and endearing, suitable for an professional adoption profile.`;
 
     const { media } = await ai.generate({
       model: 'googleai/imagen-4.0-fast-generate-001',

@@ -1,3 +1,4 @@
+
 import { PlaceHolderImages } from "./placeholder-images";
 
 export type PetStatus = "Available" | "Pending" | "Adopted";
@@ -5,7 +6,7 @@ export type PetStatus = "Available" | "Pending" | "Adopted";
 export interface Pet {
   id: string;
   name: string;
-  species: string;
+  species: "Dog" | "Cat";
   breed: string;
   age: string;
   gender: string;
@@ -31,7 +32,6 @@ export interface Application {
   submittedAt: string;
 }
 
-// Ensure PlaceHolderImages is treated as an array to avoid evaluation errors
 const images = Array.isArray(PlaceHolderImages) ? PlaceHolderImages : [];
 
 export const INITIAL_PETS: Pet[] = [
@@ -49,7 +49,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Sunbathing", "Salmon treats", "String toys"],
     dislikes: ["Loud vacuums", "Cold floors"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "cat-1")?.imageUrl || "https://picsum.photos/seed/cat1/600/400"
+    imageUrl: images.find(img => img.id === "siamese-cat")?.imageUrl || "https://picsum.photos/seed/siamese/600/400"
   },
   {
     id: "2",
@@ -65,7 +65,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Fetch", "Swimming", "Belly rubs"],
     dislikes: ["Being alone for too long"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "dog-1")?.imageUrl || "https://picsum.photos/seed/dog1/600/400"
+    imageUrl: images.find(img => img.id === "golden-retriever")?.imageUrl || "https://picsum.photos/seed/golden/600/400"
   },
   {
     id: "3",
@@ -81,7 +81,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Head scratches", "Large cat trees", "Grooming"],
     dislikes: ["Small spaces"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "cat-2")?.imageUrl || "https://picsum.photos/seed/cat2/600/400"
+    imageUrl: images.find(img => img.id === "maine-coon")?.imageUrl || "https://picsum.photos/seed/mainecoon/600/400"
   },
   {
     id: "4",
@@ -97,7 +97,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Training", "Frisbee", "Long walks"],
     dislikes: ["Boredom"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "dog-2")?.imageUrl || "https://picsum.photos/seed/dog2/600/400"
+    imageUrl: images.find(img => img.id === "border-collie")?.imageUrl || "https://picsum.photos/seed/bordercollie/600/400"
   }
 ];
 
