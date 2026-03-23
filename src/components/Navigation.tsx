@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -19,7 +18,7 @@ export function Navigation() {
                 <PawPrint className="h-6 w-6 text-white" />
               </div>
               <span className="text-xl font-headline font-bold text-primary tracking-tight">
-                PetMatch <span className="text-accent">Connect</span>
+                PawPals <span className="text-accent">Hub</span>
               </span>
             </Link>
           </div>

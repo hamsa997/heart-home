@@ -1,11 +1,10 @@
-
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'PetMatch Connect | Online Pet Adoption',
-  description: 'Find your perfect companion through PetMatch Connect. Professional pet adoption made simple.',
+  title: 'PawPals Hub | Online Pet Adoption',
+  description: 'Find your perfect companion through PawPals Hub. Professional pet adoption made simple.',
 };
 
 export default function RootLayout({
