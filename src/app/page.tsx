@@ -1,20 +1,33 @@
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
-import { Heart, Sparkles, Home as HomeIcon, Star } from "lucide-react";
+import { Heart, Sparkles, Home as HomeIcon, Star, Quote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
+  const testimonials = [
+    {
+      text: "Luna didn't just join our family; she completed it. Every purr is a reminder of the love we found at HeartHome.",
+      author: "Sarah & Mark",
+      role: "Adopted Luna in 2023"
+    },
+    {
+      text: "Finding Cooper was the best thing that happened to us. HeartHome made the journey so special and personal.",
+      author: "The Rodriguez Family",
+      role: "Adopted Cooper in 2024"
+    }
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative bg-[#fffaf9] pt-20 pb-32 overflow-hidden">
+      <section className="relative bg-background pt-20 pb-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8 max-w-2xl">
-              <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-primary font-semibold text-sm animate-bounce-slow">
+              <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-primary font-semibold text-sm">
                 <Heart className="h-4 w-4 fill-primary" />
                 Find the missing piece of your heart
               </div>
@@ -73,7 +86,7 @@ export default function Home() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-12">
-            <div className="group p-12 rounded-[3rem] bg-[#fffaf9] border border-primary/5 hover:border-primary/20 transition-all hover:shadow-2xl">
+            <div className="group p-12 rounded-[3rem] bg-background border border-primary/5 hover:border-primary/20 transition-all hover:shadow-2xl">
               <div className="bg-primary/10 w-20 h-20 rounded-[2rem] flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform">
                 <Sparkles className="h-10 w-10 text-primary" />
               </div>
@@ -81,7 +94,7 @@ export default function Home() {
               <p className="text-muted-foreground leading-relaxed">Our AI-assisted matching doesn't just look at size and age; it looks at personalities and lifestyles.</p>
             </div>
             
-            <div className="group p-12 rounded-[3rem] bg-[#fffaf9] border border-primary/5 hover:border-primary/20 transition-all hover:shadow-2xl">
+            <div className="group p-12 rounded-[3rem] bg-background border border-primary/5 hover:border-primary/20 transition-all hover:shadow-2xl">
               <div className="bg-accent/10 w-20 h-20 rounded-[2rem] flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform">
                 <Heart className="h-10 w-10 text-accent fill-current" />
               </div>
@@ -89,13 +102,41 @@ export default function Home() {
               <p className="text-muted-foreground leading-relaxed">Every shelter in our family is hand-picked for their dedication to animal well-being and happiness.</p>
             </div>
             
-            <div className="group p-12 rounded-[3rem] bg-[#fffaf9] border border-primary/5 hover:border-primary/20 transition-all hover:shadow-2xl">
+            <div className="group p-12 rounded-[3rem] bg-background border border-primary/5 hover:border-primary/20 transition-all hover:shadow-2xl">
               <div className="bg-primary/10 w-20 h-20 rounded-[2rem] flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform">
                 <HomeIcon className="h-10 w-10 text-primary" />
               </div>
               <h3 className="text-2xl font-headline font-bold mb-4">Forever Support</h3>
               <p className="text-muted-foreground leading-relaxed">Your journey doesn't end at adoption. We provide guidance and community for the life of your pet.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Heartfelt Quotes Section */}
+      <section className="py-32 bg-primary/5 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+          <Heart className="absolute -top-10 -left-10 h-64 w-64 text-primary" />
+          <Heart className="absolute -bottom-10 -right-10 h-64 w-64 text-accent" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-headline font-bold text-foreground">Heartfelt Stories</h2>
+            <p className="text-muted-foreground mt-4 italic">The moments that make it all worthwhile.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {testimonials.map((t, idx) => (
+              <div key={idx} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-primary/5 flex flex-col items-center text-center space-y-6 relative group hover:scale-[1.02] transition-transform">
+                <Quote className="h-12 w-12 text-accent/30 absolute top-8 left-8" />
+                <p className="text-xl text-foreground font-medium italic leading-relaxed pt-6">
+                  "{t.text}"
+                </p>
+                <div className="space-y-1">
+                  <h4 className="font-headline font-bold text-primary text-lg">{t.author}</h4>
+                  <p className="text-sm text-muted-foreground font-medium">{t.role}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
