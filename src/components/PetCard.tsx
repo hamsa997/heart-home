@@ -13,7 +13,8 @@ interface PetCardProps {
 export function PetCard({ pet }: PetCardProps) {
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
   const imageHint = `cartoon ${pet.species.toLowerCase()}`;
-  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+  // Dynamically generate the image URL based on species and breed
+  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed);
 
   return (
     <Link href={`/pets/${pet.id}`}>
@@ -21,7 +22,7 @@ export function PetCard({ pet }: PetCardProps) {
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image 
             src={dynamicImageUrl}
-            alt={pet.name}
+            alt={`${pet.name} - ${pet.breed}`}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             data-ai-hint={imageHint}

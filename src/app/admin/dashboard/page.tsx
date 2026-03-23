@@ -81,7 +81,7 @@ export default function AdminDashboard() {
           <CardContent>
              <div className="space-y-4">
               {INITIAL_PETS.slice(0, 3).map(pet => {
-                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed);
                 return (
                   <div key={pet.id} className="flex items-center gap-3 md:gap-4 p-3 md:p-4 bg-muted/30 rounded-xl">
                     <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-lg overflow-hidden shrink-0">

@@ -24,7 +24,8 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
 
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
   const imageHint = `cartoon ${pet.species.toLowerCase()}`;
-  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+  // Dynamically generate the image URL based on species and breed
+  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -42,7 +43,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
             <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
               <Image 
                 src={dynamicImageUrl}
-                alt={pet.name}
+                alt={`${pet.name} - ${pet.breed}`}
                 fill
                 className="object-cover"
                 data-ai-hint={imageHint}

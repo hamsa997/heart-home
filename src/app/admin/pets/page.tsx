@@ -59,7 +59,7 @@ export default function AdminPets() {
             </TableHeader>
             <TableBody>
               {INITIAL_PETS.map((pet) => {
-                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed);
                 return (
                   <TableRow key={pet.id} className="hover:bg-muted/5 transition-colors">
                     <TableCell>
