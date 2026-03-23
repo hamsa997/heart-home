@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'PawPals Hub | Online Pet Adoption',
-  description: 'Find your perfect companion through PawPals Hub. Professional pet adoption made simple.',
+  title: 'AdoptMe | Online Pet Adoption',
+  description: 'Find your perfect companion through AdoptMe. Professional pet adoption made simple.',
 };
 
 export default function RootLayout({

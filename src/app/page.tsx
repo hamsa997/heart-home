@@ -22,7 +22,7 @@ export default function Home() {
                 Every Pet Deserves a <span className="text-primary">Loving Home</span>
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                PawPals Hub bridges the gap between animal rescues and loving families. Browse hundreds of available pets waiting to meet you today.
+                AdoptMe bridges the gap between animal rescues and loving families. Browse hundreds of available pets waiting to meet you today.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-lg h-14 px-8 shadow-xl hover:shadow-primary/20 transition-all">
@@ -68,7 +68,7 @@ export default function Home() {
       <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-16">
           <div className="space-y-4">
-            <h2 className="text-3xl lg:text-5xl font-headline font-bold text-foreground">Why Choose PawPals?</h2>
+            <h2 className="text-3xl lg:text-5xl font-headline font-bold text-foreground">Why Choose AdoptMe?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">We simplify the adoption process to ensure every pet finds its ideal match.</p>
           </div>
           
@@ -105,9 +105,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 text-center space-y-4">
           <div className="flex items-center justify-center gap-2">
             <PawPrint className="h-6 w-6 text-primary" />
-            <span className="text-xl font-headline font-bold text-primary">PawPals Hub</span>
+            <span className="text-xl font-headline font-bold text-primary">AdoptMe</span>
           </div>
-          <p className="text-muted-foreground">© 2024 PawPals Hub Adoption System. All rights reserved.</p>
+          <p className="text-muted-foreground">© 2024 AdoptMe Adoption System. All rights reserved.</p>
         </div>
       </footer>
     </div>

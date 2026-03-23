@@ -18,7 +18,7 @@ export function Navigation() {
                 <PawPrint className="h-6 w-6 text-white" />
               </div>
               <span className="text-xl font-headline font-bold text-primary tracking-tight">
-                PawPals <span className="text-accent">Hub</span>
+                Adopt<span className="text-accent">Me</span>
               </span>
             </Link>
           </div>
