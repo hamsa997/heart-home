@@ -5,7 +5,7 @@ import { Navigation } from "@/components/Navigation";
 import { INITIAL_PETS } from "@/app/lib/mock-data";
 import { PetCard } from "@/components/PetCard";
 import { Input } from "@/components/ui/input";
-import { Search, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -102,10 +102,6 @@ export default function PetListing() {
         <div className="space-y-8">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold font-headline">{filteredPets.length} pets available</h2>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer hover:text-primary transition-colors">
-              <SlidersHorizontal className="h-4 w-4" />
-              Advanced Filters
-            </div>
           </div>
           
           {filteredPets.length > 0 ? (
