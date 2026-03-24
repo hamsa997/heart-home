@@ -2,7 +2,7 @@
 
 import { use, useState } from "react";
 import { Navigation } from "@/components/Navigation";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Heart, Info, CheckCircle2, Share2, ArrowLeft, Dog, Cat, Loader2 } from "lucide-react";
@@ -62,6 +62,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 alt={`${pet.name} - ${pet.breed}`}
                 fill
                 className="object-cover"
+                unoptimized
                 data-ai-hint={imageHint}
               />
               <div className="absolute top-6 left-6 flex gap-2">

@@ -10,7 +10,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/badge";
 import { Plus, Edit, Trash2, Search, MoreHorizontal, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -91,6 +91,7 @@ export default function AdminPets() {
                             alt={pet.name} 
                             fill 
                             className="object-cover" 
+                            unoptimized
                             data-ai-hint={`cartoon ${pet.species?.toLowerCase()}`}
                           />
                         </div>

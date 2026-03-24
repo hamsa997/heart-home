@@ -1,5 +1,5 @@
 import { Pet } from "@/app/lib/mock-data";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { MapPin, Heart, ArrowRight, Dog, Cat } from "lucide-react";
 import Image from "next/image";
@@ -16,7 +16,7 @@ export function PetCard({ pet }: PetCardProps) {
   const species = pet.species || "Dog";
   const SpeciesIcon = species === "Dog" ? Dog : Cat;
   const imageHint = `cartoon ${species.toLowerCase()}`;
-  const dynamicImageUrl = pet.imageUrl || getPetImageUrl(species, pet.breed, pet.name);
+  const dynamicImageUrl = pet.imageUrl || pet.mainPhotoUrl || getPetImageUrl(species, pet.breed, pet.name);
 
   return (
     <Link href={`/pets/${pet.id}`}>
@@ -27,11 +27,12 @@ export function PetCard({ pet }: PetCardProps) {
             alt={`${pet.name || 'Pet'} - ${pet.breed || 'Mixed'}`}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
+            unoptimized
             data-ai-hint={imageHint}
           />
           <div className="absolute top-4 left-4 flex gap-2">
-            <Badge variant={pet.status === "Available" ? "default" : "secondary"} className={pet.status === "Available" ? "bg-accent hover:bg-accent" : ""}>
-              {pet.status || "Available"}
+            <Badge variant={pet.status === "Available" || pet.isAvailable ? "default" : "secondary"} className={pet.status === "Available" || pet.isAvailable ? "bg-accent hover:bg-accent" : ""}>
+              {pet.status || (pet.isAvailable ? "Available" : "Adopted")}
             </Badge>
           </div>
         </div>
@@ -45,7 +46,7 @@ export function PetCard({ pet }: PetCardProps) {
                   <SpeciesIcon className="h-4 w-4 text-primary" />
                 </div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground truncate">{pet.breed || 'Mixed'} • {pet.age || 'Unknown age'}</p>
+              <p className="text-sm font-medium text-muted-foreground truncate">{pet.breed || 'Mixed'} • {pet.age || `${pet.ageInYears} years`}</p>
             </div>
             <button className="text-muted-foreground hover:text-destructive transition-colors shrink-0 ml-2">
               <Heart className="h-5 w-5" />
