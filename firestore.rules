@@ -1,36 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    /**
-     * HEARTHOME SECURITY RULES (PUBLIC ADOPTION OPTIMIZED)
-     *
-     * Rules optimized for a public adoption system.
-     */
-
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    // --- Collection Rules ---
-
     match /pets/{petId} {
-      // Anyone can browse available pets.
-      allow get, list: if true;
-      // Writing to pets is disabled in the public portal for security.
-      allow write: if false;
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if false; // For MVP, edits are not enabled
     }
-
-    match /adoptionApplications/{applicationId} {
-      // Anyone can submit an adoption request.
+    match /adoptionRequests/{requestId} {
       allow create: if true;
-      // Public users are strictly forbidden from listing or reading others' applications.
-      // This prevents the "Missing or insufficient permissions" error during unauthorized list attempts.
-      allow read, update, delete, list: if false;
-    }
-    
-    match /roles_admin/{userId} {
-      allow read, write: if false;
+      allow read, update, delete: if false;
     }
   }
 }

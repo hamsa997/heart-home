@@ -1,69 +1,55 @@
-import { Pet } from "@/app/lib/mock-data";
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { MapPin, Heart, ArrowRight, Dog, Cat } from "lucide-react";
+import { MapPin, Heart, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { getPetImageUrl } from "@/lib/utils";
 
 interface PetCardProps {
-  pet: Pet;
+  pet: {
+    id: string;
+    petName: string;
+    breed: string;
+    age: string;
+    city: string;
+    imageUrl: string;
+    status?: string;
+  };
 }
 
 export function PetCard({ pet }: PetCardProps) {
-  if (!pet) return null;
-
-  const species = pet.species || "Dog";
-  const SpeciesIcon = species === "Dog" ? Dog : Cat;
-  const imageHint = `cartoon ${species.toLowerCase()}`;
-  const dynamicImageUrl = pet.imageUrl || pet.mainPhotoUrl || getPetImageUrl(species, pet.breed, pet.name);
-
   return (
-    <Link href={`/pets/${pet.id}`}>
-      <Card className="group overflow-hidden border-border bg-white hover:shadow-xl transition-all duration-300 rounded-2xl h-full flex flex-col">
-        <div className="relative aspect-[4/3] overflow-hidden">
+    <Link href={`/pets/${pet.id}`} className="group block h-full">
+      <Card className="rounded-[2rem] overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+        <div className="relative aspect-[4/5] overflow-hidden">
           <Image 
-            src={dynamicImageUrl}
-            alt={`${pet.name || 'Pet'} - ${pet.breed || 'Mixed'}`}
+            src={pet.imageUrl || `https://picsum.photos/seed/${pet.id}/600/800`}
+            alt={pet.petName}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             unoptimized
-            data-ai-hint={imageHint}
           />
-          <div className="absolute top-4 left-4 flex gap-2">
-            <Badge variant={pet.status === "Available" || pet.isAvailable ? "default" : "secondary"} className={pet.status === "Available" || pet.isAvailable ? "bg-accent hover:bg-accent" : ""}>
-              {pet.status || (pet.isAvailable ? "Available" : "Adopted")}
+          <div className="absolute top-4 left-4">
+            <Badge className="bg-white/90 text-primary hover:bg-white px-3 py-1 rounded-full shadow-sm">
+              {pet.status || "Available"}
             </Badge>
           </div>
         </div>
         
-        <CardContent className="p-6 flex-grow space-y-4">
-          <div className="flex justify-between items-start">
-            <div className="space-y-1 min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-headline font-bold text-foreground truncate">{pet.name || 'Buddy'}</h3>
-                <div className="bg-primary/10 p-1 rounded-md shrink-0">
-                  <SpeciesIcon className="h-4 w-4 text-primary" />
-                </div>
-              </div>
-              <p className="text-sm font-medium text-muted-foreground truncate">{pet.breed || 'Mixed'} • {pet.age || `${pet.ageInYears} years`}</p>
-            </div>
-            <button className="text-muted-foreground hover:text-destructive transition-colors shrink-0 ml-2">
-              <Heart className="h-5 w-5" />
-            </button>
+        <CardContent className="p-6 flex-grow space-y-2">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold truncate">{pet.petName}</h3>
+            <Heart className="h-5 w-5 text-muted-foreground hover:text-accent transition-colors" />
           </div>
-          
-          <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-            {pet.description || "No description available."}
-          </p>
-          
+          <p className="text-muted-foreground font-medium">{pet.breed} • {pet.age}</p>
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <MapPin className="h-4 w-4" />
-            <span className="truncate">{pet.location || "Sanctuary"}</span>
+            <span>{pet.city}</span>
           </div>
         </CardContent>
         
-        <CardFooter className="px-6 py-4 border-t border-border bg-muted/5 group-hover:bg-primary/5 transition-colors">
+        <CardFooter className="px-6 py-4 bg-muted/10 group-hover:bg-primary/5 transition-colors">
           <div className="flex items-center justify-between w-full">
             <span className="text-primary font-bold text-sm">View Details</span>
             <ArrowRight className="h-4 w-4 text-primary group-hover:translate-x-1 transition-transform" />

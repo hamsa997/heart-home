@@ -1,53 +1,52 @@
-
 {
   "placeholderImages": [
     {
-      "id": "pet-luna",
-      "description": "Luna the Siamese Cat",
-      "imageUrl": "https://picsum.photos/seed/luna-cartoon-cat/600/400",
-      "imageHint": "cartoon cat"
+      "id": "pet-golden",
+      "description": "Golden Retriever Puppy",
+      "imageUrl": "https://picsum.photos/seed/dog-golden-retriever/800/600",
+      "imageHint": "golden retriever"
     },
     {
-      "id": "pet-cooper",
-      "description": "Cooper the Golden Retriever",
-      "imageUrl": "https://picsum.photos/seed/cooper-cartoon-dog/600/400",
-      "imageHint": "cartoon dog"
+      "id": "pet-indie",
+      "description": "Indie Dog",
+      "imageUrl": "https://picsum.photos/seed/dog-indie/800/600",
+      "imageHint": "street dog"
     },
     {
-      "id": "pet-milo",
-      "description": "Milo the Maine Coon Cat",
-      "imageUrl": "https://picsum.photos/seed/milo-cartoon-cat/600/400",
-      "imageHint": "cartoon cat"
+      "id": "pet-white-cat",
+      "description": "White Cat with Blue Eyes",
+      "imageUrl": "https://picsum.photos/seed/cat-white/800/600",
+      "imageHint": "white cat"
     },
     {
-      "id": "pet-bella",
-      "description": "Bella the Border Collie",
-      "imageUrl": "https://picsum.photos/seed/bella-cartoon-dog/600/400",
-      "imageHint": "cartoon dog"
+      "id": "pet-orange-tabby",
+      "description": "Orange Tabby Cat",
+      "imageUrl": "https://picsum.photos/seed/cat-orange-tabby/800/600",
+      "imageHint": "orange cat"
     },
     {
-      "id": "pet-oliver",
-      "description": "Oliver the Tabby Cat",
-      "imageUrl": "https://picsum.photos/seed/oliver-cartoon-cat/600/400",
-      "imageHint": "cartoon cat"
+      "id": "pet-black-puppy",
+      "description": "Black Puppy",
+      "imageUrl": "https://picsum.photos/seed/dog-black-puppy/800/600",
+      "imageHint": "black puppy"
     },
     {
-      "id": "pet-daisy",
-      "description": "Daisy the Beagle",
-      "imageUrl": "https://picsum.photos/seed/daisy-cartoon-dog/600/400",
-      "imageHint": "cartoon dog"
+      "id": "pet-beagle",
+      "description": "Beagle Dog",
+      "imageUrl": "https://picsum.photos/seed/dog-beagle/800/600",
+      "imageHint": "beagle"
     },
     {
-      "id": "pet-snowball",
-      "description": "Snowball the Persian Cat",
-      "imageUrl": "https://picsum.photos/seed/snowball-cartoon-cat/600/400",
-      "imageHint": "cartoon cat"
+      "id": "pet-persian",
+      "description": "Persian Cat",
+      "imageUrl": "https://picsum.photos/seed/cat-persian/800/600",
+      "imageHint": "persian cat"
     },
     {
-      "id": "pet-rex",
-      "description": "Rex the Labrador",
-      "imageUrl": "https://picsum.photos/seed/rex-cartoon-dog/600/400",
-      "imageHint": "cartoon dog"
+      "id": "pet-budgie",
+      "description": "Budgie Parrot",
+      "imageUrl": "https://picsum.photos/seed/bird-budgie/800/600",
+      "imageHint": "budgie"
     }
   ]
 }

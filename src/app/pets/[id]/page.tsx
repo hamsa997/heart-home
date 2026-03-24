@@ -5,185 +5,131 @@ import { Navigation } from "@/components/Navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Heart, Info, CheckCircle2, Share2, ArrowLeft, Dog, Cat, Loader2 } from "lucide-react";
+import { MapPin, Info, CheckCircle2, ArrowLeft, Phone, Mail, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { AdoptionForm } from "@/components/AdoptionForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { getPetImageUrl } from "@/lib/utils";
 import { useDoc, useFirestore, useMemoFirebase } from "@/firebase";
 import { doc } from "firebase/firestore";
+import { AdoptionForm } from "@/components/AdoptionForm";
 
 export default function PetDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const db = useFirestore();
   const petRef = useMemoFirebase(() => doc(db, "pets", id), [db, id]);
   const { data: pet, isLoading } = useDoc(petRef);
-  const [isApplicationSent, setIsApplicationSent] = useState(false);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="text-muted-foreground font-medium">Getting buddy details...</p>
-      </div>
-    );
-  }
-
-  if (!pet) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
-        <h1 className="text-2xl font-bold">Buddy Not Found</h1>
-        <p className="text-muted-foreground">This pet might have already found their forever home.</p>
-        <Button asChild><Link href="/pets">Back to Listings</Link></Button>
-      </div>
-    );
-  }
-
-  const SpeciesIcon = pet.species?.toLowerCase() === "cat" ? Cat : Dog;
-  const imageHint = `cartoon ${pet.species?.toLowerCase()}`;
-  const dynamicImageUrl = pet.mainPhotoUrl || getPetImageUrl(pet.species || "dog", pet.breed || "mixed", pet.name);
+  if (isLoading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary h-12 w-12" /></div>;
+  if (!pet) return <div className="h-screen flex items-center justify-center">Pet not found.</div>;
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background">
       <Navigation />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-12">
-        <Link href="/pets" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group">
-          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-          Back to listings
+      <main className="max-w-7xl mx-auto px-4 py-12 space-y-8">
+        <Link href="/pets" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+          <ArrowLeft className="h-4 w-4" /> Back to Browse
         </Link>
 
         <div className="grid lg:grid-cols-3 gap-12">
           <div className="lg:col-span-2 space-y-8">
-            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
+            <div className="relative aspect-[16/9] rounded-[2rem] overflow-hidden shadow-xl">
               <Image 
-                src={dynamicImageUrl}
-                alt={`${pet.name} - ${pet.breed}`}
+                src={pet.imageUrl || `https://picsum.photos/seed/${pet.id}/1200/800`}
+                alt={pet.petName}
                 fill
                 className="object-cover"
                 unoptimized
-                data-ai-hint={imageHint}
               />
-              <div className="absolute top-6 left-6 flex gap-2">
-                <Badge className="bg-white/90 text-primary text-md px-4 py-1.5 shadow-lg backdrop-blur-sm border-none hover:bg-white/90">
-                  {pet.isAvailable ? "Available" : "Adopted"}
-                </Badge>
-              </div>
             </div>
 
             <div className="space-y-6">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex justify-between items-start">
                 <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-4xl md:text-5xl font-headline font-bold text-foreground">{pet.name}</h1>
-                    <div className="bg-primary/10 p-2 rounded-xl">
-                      <SpeciesIcon className="h-8 w-8 text-primary" />
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-4 text-muted-foreground font-medium">
-                    <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {pet.location || "Sanctuary"}</span>
-                    <span className="hidden md:inline">•</span>
-                    <span>{pet.breed || "Mixed"}</span>
-                    <span className="hidden md:inline">•</span>
-                    <span>{pet.ageInYears} years</span>
+                  <h1 className="text-4xl font-bold">{pet.petName}</h1>
+                  <div className="flex items-center gap-4 text-muted-foreground font-medium">
+                    <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {pet.city}</span>
+                    <span>•</span>
+                    <span>{pet.breed}</span>
+                    <span>•</span>
+                    <span>{pet.age}</span>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl"><Heart className="h-6 w-6" /></Button>
-                  <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl"><Share2 className="h-6 w-6" /></Button>
-                </div>
+                <Badge className="bg-primary px-4 py-1 text-md rounded-full">{pet.status || "Available"}</Badge>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                <div className="bg-white p-6 rounded-2xl border border-border space-y-1 text-center">
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold">Gender</p>
-                  <p className="text-lg font-headline font-bold text-primary">{pet.gender}</p>
-                </div>
-                <div className="bg-white p-6 rounded-2xl border border-border space-y-1 text-center">
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold">Age</p>
-                  <p className="text-lg font-headline font-bold text-primary">{pet.ageInYears}y</p>
-                </div>
-                <div className="bg-white p-6 rounded-2xl border border-border space-y-1 text-center">
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold">Species</p>
-                  <p className="text-lg font-headline font-bold text-primary">{pet.species}</p>
-                </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { label: "Gender", value: pet.gender },
+                  { label: "Color", value: pet.color },
+                  { label: "Vaccinated", value: pet.vaccinated ? "Yes" : "No" },
+                  { label: "Type", value: pet.type }
+                ].map((item) => (
+                  <div key={item.label} className="bg-white p-4 rounded-2xl border border-border text-center">
+                    <p className="text-xs text-muted-foreground font-bold uppercase">{item.label}</p>
+                    <p className="text-lg font-bold text-primary">{item.value}</p>
+                  </div>
+                ))}
               </div>
 
               <div className="space-y-4">
-                <h2 className="text-2xl font-headline font-bold flex items-center gap-2">
-                  <Info className="h-6 w-6 text-primary" /> About {pet.name}
-                </h2>
-                <div className="text-lg text-muted-foreground leading-relaxed bg-white p-8 rounded-3xl border border-border whitespace-pre-wrap">
+                <h2 className="text-2xl font-bold flex items-center gap-2"><Info className="h-6 w-6 text-primary" /> Story</h2>
+                <div className="text-lg text-muted-foreground leading-relaxed bg-white p-6 rounded-3xl border border-border whitespace-pre-wrap">
                   {pet.description}
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-headline font-bold">Personality Traits</h3>
+                  <h3 className="text-xl font-bold">Temperament</h3>
                   <div className="flex flex-wrap gap-2">
-                    {pet.personalityTraits?.map((trait: string) => (
-                      <Badge key={trait} variant="secondary" className="px-4 py-1.5 text-sm rounded-lg bg-secondary/50 text-primary border-none">
-                        {trait}
-                      </Badge>
+                    {pet.temperament?.split(',').map((trait: string) => (
+                      <Badge key={trait} variant="secondary" className="px-4 py-1 rounded-full">{trait.trim()}</Badge>
                     ))}
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-xl font-headline font-bold">Adoption Requirements</h3>
-                  <ul className="space-y-2">
-                    {pet.adoptionRequirements?.map((req: string) => (
-                      <li key={req} className="flex items-center gap-2 text-muted-foreground">
-                        <CheckCircle2 className="h-4 w-4 text-accent" />
-                        {req}
-                      </li>
-                    ))}
-                  </ul>
+                  <h3 className="text-xl font-bold">Reason for Rehoming</h3>
+                  <p className="text-muted-foreground">{pet.reasonForRehoming}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="space-y-6">
-            <Card className="rounded-3xl border-border shadow-xl overflow-hidden sticky top-24">
-              <div className="bg-primary p-8 text-white space-y-2">
-                <h3 className="text-2xl font-headline font-bold">Interested in {pet.name}?</h3>
-                <p className="opacity-90">Start your journey today by submitting an inquiry.</p>
+            <Card className="rounded-[2rem] border-none shadow-xl overflow-hidden">
+              <div className="bg-primary p-6 text-white text-center">
+                <h3 className="text-2xl font-bold">Ready to Adopt?</h3>
+                <p className="opacity-90">Contact the owner directly.</p>
               </div>
               <CardContent className="p-8 space-y-6">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-sm">
-                    <div className="bg-accent/10 p-2 rounded-lg text-accent">
-                      <CheckCircle2 className="h-4 w-4" />
+                  <div className="flex items-center gap-3">
+                    <div className="bg-muted p-3 rounded-full"><User className="h-5 w-5 text-primary" /></div>
+                    <div>
+                      <p className="text-xs text-muted-foreground font-bold uppercase">Owner</p>
+                      <p className="font-bold">{pet.ownerName}</p>
                     </div>
-                    <span>Health check completed</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <div className="bg-accent/10 p-2 rounded-lg text-accent">
-                      <CheckCircle2 className="h-4 w-4" />
+                  <div className="flex items-center gap-3">
+                    <div className="bg-muted p-3 rounded-full"><Phone className="h-5 w-5 text-primary" /></div>
+                    <div>
+                      <p className="text-xs text-muted-foreground font-bold uppercase">Phone</p>
+                      <p className="font-bold">{pet.ownerPhone || "Provided on request"}</p>
                     </div>
-                    <span>Vaccinations up to date</span>
                   </div>
                 </div>
 
                 <Dialog>
-                  <DialogTrigger asChild disabled={!pet.isAvailable}>
-                    <Button className="w-full bg-accent hover:bg-accent/90 text-white h-14 text-lg shadow-lg hover:shadow-accent/20">
-                      {pet.isAvailable ? "Submit Adoption Application" : "Currently Adopted"}
-                    </Button>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-accent hover:bg-accent/90 h-14 text-lg rounded-full">Send Adoption Request</Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px] rounded-3xl">
+                  <DialogContent className="rounded-3xl max-w-lg">
                     <DialogHeader>
-                      <DialogTitle className="text-2xl font-headline font-bold">Adoption Inquiry</DialogTitle>
+                      <DialogTitle className="text-2xl font-bold">Request to Adopt {pet.petName}</DialogTitle>
                     </DialogHeader>
-                    <AdoptionForm pet={pet as any} onSuccess={() => setIsApplicationSent(true)} />
+                    <AdoptionForm pet={pet as any} />
                   </DialogContent>
                 </Dialog>
-
-                <p className="text-xs text-muted-foreground text-center">
-                  By applying, you agree to our pet care policies and sanctuary terms.
-                </p>
               </CardContent>
             </Card>
           </div>
@@ -192,3 +138,4 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
     </div>
   );
 }
+import { Loader2 } from "lucide-react";
