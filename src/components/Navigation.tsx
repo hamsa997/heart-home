@@ -1,15 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X, Heart, Mail } from "lucide-react";
+import { Menu, X, Heart, Mail, PawPrint } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const navLinks = [
+    { name: "Browse Pets", href: "/pets", icon: PawPrint },
+    { name: "The Journey", href: "/how-it-works", icon: Heart },
+    { name: "Contact", href: "/contact", icon: Mail },
+  ];
+
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
+    <nav className="bg-white/80 backdrop-blur-xl border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <div className="flex items-center">
@@ -24,18 +30,22 @@ export function Navigation() {
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/pets" className="text-muted-foreground hover:text-primary transition-colors font-medium">Browse Pets</Link>
-            <Link href="/how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">The Journey</Link>
-            <Link href="/contact" className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors font-medium">
-              <Mail className="h-4 w-4" /> Contact
-            </Link>
-            <Button asChild variant="default" className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 rounded-full px-6">
-              <Link href="/pets">Adopt a Buddy</Link>
+            {navLinks.map((link) => (
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                className="text-muted-foreground hover:text-primary transition-colors font-medium flex items-center gap-1.5"
+              >
+                {link.name}
+              </Link>
+            ))}
+            <Button asChild variant="default" className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 rounded-full px-8 h-11">
+              <Link href="/pets">Find a Friend</Link>
             </Button>
           </div>
 
           <div className="md:hidden flex items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-muted-foreground p-2">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-muted-foreground p-2 hover:bg-muted rounded-lg transition-colors">
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
@@ -43,13 +53,23 @@ export function Navigation() {
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-border p-4 space-y-4 animate-in slide-in-from-top-4 duration-200">
-          <Link href="/pets" className="block text-lg font-medium text-muted-foreground" onClick={() => setIsOpen(false)}>Browse Pets</Link>
-          <Link href="/how-it-works" className="block text-lg font-medium text-muted-foreground" onClick={() => setIsOpen(false)}>The Journey</Link>
-          <Link href="/contact" className="block text-lg font-medium text-muted-foreground" onClick={() => setIsOpen(false)}>Contact Us</Link>
-          <Button asChild className="w-full bg-primary rounded-full">
-            <Link href="/pets" onClick={() => setIsOpen(false)}>Adopt a Buddy</Link>
-          </Button>
+        <div className="md:hidden bg-white border-b border-border p-6 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-xl">
+          {navLinks.map((link) => (
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-primary py-2" 
+              onClick={() => setIsOpen(false)}
+            >
+              <link.icon className="h-5 w-5" />
+              {link.name}
+            </Link>
+          ))}
+          <div className="pt-4">
+            <Button asChild className="w-full bg-primary rounded-full h-14 text-lg font-bold shadow-lg shadow-primary/20">
+              <Link href="/pets" onClick={() => setIsOpen(false)}>Find a Friend</Link>
+            </Button>
+          </div>
         </div>
       )}
     </nav>

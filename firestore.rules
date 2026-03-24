@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * HEARTHOME SECURITY RULES (PUBLIC VERSION)
+     * HEARTHOME SECURITY RULES (PUBLIC ADOPTION OPTIMIZED)
      *
      * Rules optimized for a public adoption system.
      */
@@ -17,15 +17,16 @@ service cloud.firestore {
     match /pets/{petId} {
       // Anyone can browse available pets.
       allow get, list: if true;
-      // In this public-only version, admin updates are disabled via rules for security.
+      // Writing to pets is disabled in the public portal for security.
       allow write: if false;
     }
 
     match /adoptionApplications/{applicationId} {
       // Anyone can submit an adoption request.
       allow create: if true;
-      // In this version, viewing applications is restricted.
-      allow read, update, delete: if false;
+      // Public users are strictly forbidden from listing or reading others' applications.
+      // This prevents the "Missing or insufficient permissions" error during unauthorized list attempts.
+      allow read, update, delete, list: if false;
     }
     
     match /roles_admin/{userId} {
