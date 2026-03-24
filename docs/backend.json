@@ -1,0 +1,208 @@
+{
+  "entities": {
+    "Pet": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Pet",
+      "type": "object",
+      "description": "Represents an animal available for adoption through the PetMatch Connect system, including its details, photos, and availability status.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Pet entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the pet."
+        },
+        "species": {
+          "type": "string",
+          "description": "The species of the pet (e.g., Dog, Cat, Bird, Rabbit)."
+        },
+        "breed": {
+          "type": "string",
+          "description": "The specific breed of the pet."
+        },
+        "ageInYears": {
+          "type": "number",
+          "description": "The estimated age of the pet in years."
+        },
+        "gender": {
+          "type": "string",
+          "description": "The gender of the pet (e.g., Male, Female, Unknown)."
+        },
+        "location": {
+          "type": "string",
+          "description": "The general geographic location or shelter where the pet is currently housed."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the pet's background, personality, and ideal home environment. This can be AI-generated."
+        },
+        "personalityTraits": {
+          "type": "array",
+          "description": "A list of personality traits or characteristics of the pet (e.g., playful, calm, independent).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "adoptionRequirements": {
+          "type": "array",
+          "description": "Specific requirements for the pet's adoption (e.g., 'fenced yard required', 'good with children', 'experienced owner needed').",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "description": "Indicates whether the pet is currently available for adoption."
+        },
+        "mainPhotoUrl": {
+          "type": "string",
+          "description": "URL to the primary photo of the pet displayed prominently on listings.",
+          "format": "uri"
+        },
+        "photoUrls": {
+          "type": "array",
+          "description": "An array of URLs to additional photos of the pet for detailed profile pages.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the pet's record was first created in the system.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the pet's record was last updated in the system.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "species",
+        "gender",
+        "isAvailable",
+        "description",
+        "mainPhotoUrl",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdoptionApplication": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AdoptionApplication",
+      "type": "object",
+      "description": "Represents a prospective adopter's formal inquiry and application for a specific pet.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AdoptionApplication entity."
+        },
+        "petId": {
+          "type": "string",
+          "description": "Reference to the Pet entity being applied for. (Relationship: Pet 1:N AdoptionApplication)"
+        },
+        "applicantName": {
+          "type": "string",
+          "description": "The full name of the prospective adopter."
+        },
+        "applicantEmail": {
+          "type": "string",
+          "description": "The email address of the prospective adopter.",
+          "format": "email"
+        },
+        "applicantPhone": {
+          "type": "string",
+          "description": "The phone number of the prospective adopter."
+        },
+        "applicantAddress": {
+          "type": "string",
+          "description": "The full residential address of the prospective adopter."
+        },
+        "message": {
+          "type": "string",
+          "description": "A personal message or statement of interest from the applicant, detailing their home and experience."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current processing status of the adoption application (e.g., 'Pending', 'Under Review', 'Approved', 'Rejected', 'Contacted')."
+        },
+        "submissionDate": {
+          "type": "string",
+          "description": "Timestamp when the adoption application was submitted by the applicant.",
+          "format": "date-time"
+        },
+        "lastUpdatedStatusDate": {
+          "type": "string",
+          "description": "Timestamp when the application's status was last updated by an administrator.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "petId",
+        "applicantName",
+        "applicantEmail",
+        "status",
+        "submissionDate",
+        "lastUpdatedStatusDate"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/pets/{petId}",
+        "definition": {
+          "entityName": "Pet",
+          "schema": {
+            "$ref": "#/backend/entities/Pet"
+          },
+          "description": "Stores individual pet profiles available for adoption. Documents in this collection are publicly readable, but can only be created, updated, or deleted by authorized administrators. No specific denormalized authorization fields are required within the document itself beyond standard admin role checks."
+        }
+      },
+      {
+        "path": "/adoptionApplications/{applicationId}",
+        "definition": {
+          "entityName": "AdoptionApplication",
+          "schema": {
+            "$ref": "#/backend/entities/AdoptionApplication"
+          },
+          "description": "Contains applications submitted by prospective adopters for specific pets. Each document includes `applicantUid` (assumed to be added to the schema for robust authorization), which is a denormalized field linking the application to the submitting user for direct access control. Only the submitting user (via `applicantUid`) or authorized administrators can read or modify their own applications; administrators can manage all applications.",
+          "params": [
+            {
+              "name": "applicationId",
+              "description": "The unique identifier for an adoption application."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "A dedicated collection for storing UIDs of users who have administrative privileges. The existence of a document at `/roles_admin/$(request.auth.uid)` grants administrative access across the application. This adheres to the DBAC principle ('Existence over Content') and ensures Authorization Independence for global roles.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier (UID) of an administrative user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to be secure, scalable, and easily debuggable, adhering to the core design principles and strategy mandates. We utilize a flattened collection approach for `pets` and `adoptionApplications` at the top level, enabling efficient querying and straightforward security rules.\n\n**Authorization Independence:** This is achieved primarily through structural segregation and implicit denormalization. For `Pet` documents, public read access is granted, while write access is restricted to authenticated administrators. Admin authorization is handled via a global `/roles_admin/{userId}` collection, eliminating the need for `get()` calls to check parent document attributes. For `AdoptionApplication` documents, the `applicantUid` (assuming this field is added to the schema as a critical denormalization for authorization) is embedded directly within each application document. This allows a user to access their own applications (`request.auth.uid == resource.data.applicantUid`) without performing cross-document `get()` operations. Similarly, admin access to all applications is checked against the global `/roles_admin` collection, ensuring no hierarchical dependencies for authorization.\n\n**QAPs (Rules are not Filters):**\n*   The `/pets` collection is designed for public listing and search. All documents within `/pets` have the same security posture: readable by anyone, writable by admins. This allows for a simple `allow read: if true;` for public access, ensuring that `list` queries on `/pets` will always return results that users are authorized to see.\n*   The `/adoptionApplications` collection is designed such that authenticated users can create their own applications and view applications associated with their `applicantUid`. Administrators, as defined in `/roles_admin`, have full read/write access to all applications. This design allows for efficient `list` operations by administrators without filtering issues, as the rule can simply `allow read: if is_admin();`. For individual users, a query `db.collection('adoptionApplications').where('applicantUid', '==', currentUser.uid)` combined with a rule `allow read: if request.auth.uid == resource.data.applicantUid || is_admin();` also supports QAPs effectively, as the database query pre-filters to only authorized data, and the rule confirms it."
+  }
+}
