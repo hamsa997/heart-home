@@ -14,19 +14,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Search, Eye, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useUser } from "@/firebase";
-import { collection, doc, query, limit } from "firebase/firestore";
+import { collection, doc, query, limit, orderBy } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AdminApplications() {
   const [mounted, setMounted] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const db = useFirestore();
   const { user } = useUser();
   const { toast } = useToast();
   
   const appsRef = useMemoFirebase(() => {
     if (!user) return null;
-    return query(collection(db, "adoptionApplications"), limit(100));
+    return query(collection(db, "adoptionApplications"), orderBy("submissionDate", "desc"), limit(100));
   }, [db, user]);
   
   const { data: applications, isLoading } = useCollection(appsRef);
@@ -54,6 +56,11 @@ export default function AdminApplications() {
       description: `Application is now ${newStatus}.`,
     });
   };
+
+  const filteredApps = applications?.filter(app => 
+    app.applicantName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    app.petName?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const stats = {
     new: applications?.filter(a => a.status === "New").length || 0,
@@ -99,7 +106,12 @@ export default function AdminApplications() {
         <div className="p-4 border-b border-border bg-muted/10 flex flex-col md:flex-row items-stretch md:items-center gap-4">
           <div className="relative flex-grow">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Filter applications by name..." className="pl-10 h-10 bg-white" />
+            <Input 
+              placeholder="Filter by name or pet..." 
+              className="pl-10 h-10 bg-white" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
         <CardContent className="p-0 overflow-x-auto">
@@ -108,17 +120,18 @@ export default function AdminApplications() {
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : (
-            <Table className="min-w-[700px]">
+            <Table className="min-w-[800px]">
               <TableHeader className="bg-muted/5">
                 <TableRow>
                   <TableHead>Applicant</TableHead>
+                  <TableHead>Pet Choice</TableHead>
                   <TableHead className="hidden lg:table-cell">Date Submitted</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {applications?.map((app) => (
+                {filteredApps?.map((app) => (
                   <TableRow key={app.id} className="hover:bg-muted/5 transition-colors">
                     <TableCell>
                       <div className="space-y-0.5 min-w-0">
@@ -126,11 +139,21 @@ export default function AdminApplications() {
                         <p className="text-[10px] md:text-xs text-muted-foreground truncate">{app.applicantEmail}</p>
                       </div>
                     </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 relative rounded-md overflow-hidden bg-muted shrink-0 border border-border">
+                          {app.petPhotoUrl && (
+                            <Image src={app.petPhotoUrl} alt={app.petName || 'Pet'} fill className="object-cover" unoptimized />
+                          )}
+                        </div>
+                        <span className="font-medium text-primary">{app.petName || "Buddy"}</span>
+                      </div>
+                    </TableCell>
                     <TableCell className="text-sm hidden lg:table-cell">
                       {formatDate(app.submissionDate)}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="bg-accent/10 text-accent border-none font-bold text-[10px] md:text-xs">
+                      <Badge variant="outline" className="bg-accent/10 text-accent border-none font-bold text-[10px] md:text-xs uppercase">
                         {app.status}
                       </Badge>
                     </TableCell>

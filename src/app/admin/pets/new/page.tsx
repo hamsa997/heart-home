@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -12,7 +12,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, ArrowLeft, Loader2, PawPrint, ImageIcon, Wand2, Link as LinkIcon } from "lucide-react";
+import { Sparkles, ArrowLeft, Loader2, PawPrint, ImageIcon, Wand2, Link as LinkIcon, Info } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { generatePetDescription } from "@/ai/flows/generate-pet-description";
@@ -34,6 +33,7 @@ import Image from "next/image";
 import { useFirestore, setDocumentNonBlocking } from "@/firebase";
 import { doc, collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { getPetImageUrl } from "@/lib/utils";
 
 const petFormSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -46,7 +46,7 @@ const petFormSchema = z.object({
   likes: z.string().optional(),
   story: z.string().optional(),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  imageUrl: z.string().url("Please provide a valid image URL"),
+  imageUrl: z.string().optional(),
   imageStyle: z.enum(["realistic", "cartoon", "artistic"]).default("cartoon"),
 });
 
@@ -74,6 +74,18 @@ export default function NewPetPage() {
       imageStyle: "cartoon",
     },
   });
+
+  const watchImageUrl = form.watch("imageUrl");
+  const watchBreed = form.watch("breed");
+  const watchSpecies = form.watch("species");
+  const watchName = form.watch("name");
+
+  const breedMatchedUrl = useMemo(() => {
+    if (!watchBreed) return null;
+    return getPetImageUrl(watchSpecies, watchBreed, watchName || 'preview');
+  }, [watchSpecies, watchBreed, watchName]);
+
+  const activePreviewUrl = watchImageUrl || breedMatchedUrl;
 
   const handleAiGenerateDesc = async () => {
     const values = form.getValues();
@@ -165,7 +177,7 @@ export default function NewPetPage() {
       description: values.description,
       personalityTraits: values.personalityTraits?.split(",").map(s => s.trim()) || [],
       adoptionRequirements: values.likes?.split(",").map(s => s.trim()) || [],
-      mainPhotoUrl: values.imageUrl,
+      mainPhotoUrl: values.imageUrl || breedMatchedUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -303,15 +315,23 @@ export default function NewPetPage() {
                   <CardTitle className="text-xl font-headline">Pet Portrait</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
-                  <div className="relative aspect-square rounded-[2rem] bg-muted/30 border-2 border-dashed border-border flex flex-col items-center justify-center overflow-hidden transition-all hover:bg-muted/40">
-                    {form.watch("imageUrl") ? (
-                      <Image 
-                        src={form.watch("imageUrl")} 
-                        alt="Preview" 
-                        fill 
-                        className="object-cover animate-in fade-in duration-1000"
-                        unoptimized
-                      />
+                  <div className="relative aspect-square rounded-[2rem] bg-muted/30 border-2 border-dashed border-border flex flex-col items-center justify-center overflow-hidden transition-all hover:bg-muted/40 group">
+                    {activePreviewUrl ? (
+                      <>
+                        <Image 
+                          src={activePreviewUrl} 
+                          alt="Preview" 
+                          fill 
+                          className="object-cover animate-in fade-in duration-1000"
+                          unoptimized
+                        />
+                        {!watchImageUrl && (
+                          <div className="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-md p-2 rounded-xl text-[10px] text-white flex items-center gap-2">
+                            <Info className="h-3 w-3" />
+                            Live breed preview active
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <div className="text-center p-6 space-y-4">
                         <div className="bg-background/50 p-4 rounded-full w-fit mx-auto shadow-sm">
@@ -319,7 +339,7 @@ export default function NewPetPage() {
                         </div>
                         <div className="space-y-1">
                           <p className="font-bold text-foreground">No portrait yet</p>
-                          <p className="text-xs text-muted-foreground">Upload or generate!</p>
+                          <p className="text-xs text-muted-foreground">Type a breed to see preview!</p>
                         </div>
                       </div>
                     )}
@@ -333,29 +353,11 @@ export default function NewPetPage() {
                     )}
                   </div>
 
-                  <Tabs defaultValue="manual" className="w-full">
+                  <Tabs defaultValue="ai" className="w-full">
                     <TabsList className="grid w-full grid-cols-2 rounded-xl h-12 bg-muted/50 p-1">
-                      <TabsTrigger value="manual" className="rounded-lg">Manual URL</TabsTrigger>
                       <TabsTrigger value="ai" className="rounded-lg">AI Artist</TabsTrigger>
+                      <TabsTrigger value="manual" className="rounded-lg">Manual URL</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="manual" className="pt-4 space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="imageUrl"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs uppercase tracking-wider opacity-60">Image Address</FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input placeholder="https://example.com/photo.jpg" {...field} className="pl-10 rounded-xl h-11" />
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
                     <TabsContent value="ai" className="pt-4 space-y-4">
                       <FormField
                         control={form.control}
@@ -387,6 +389,23 @@ export default function NewPetPage() {
                         <Wand2 className="h-5 w-5 group-hover:rotate-12 transition-transform" />
                         Generate AI Portrait
                       </Button>
+                    </TabsContent>
+                    <TabsContent value="manual" className="pt-4 space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="imageUrl"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-xs uppercase tracking-wider opacity-60">Image Address</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input placeholder="https://example.com/photo.jpg" {...field} className="pl-10 rounded-xl h-11" />
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                     </TabsContent>
                   </Tabs>
 

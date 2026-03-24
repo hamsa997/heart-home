@@ -33,6 +33,7 @@ interface AdoptionFormProps {
   pet: {
     id: string;
     name: string;
+    mainPhotoUrl?: string;
   };
   onSuccess?: () => void;
 }
@@ -73,6 +74,8 @@ export function AdoptionForm({ pet, onSuccess }: AdoptionFormProps) {
 
     const applicationData = {
       petId: pet.id,
+      petName: pet.name,
+      petPhotoUrl: pet.mainPhotoUrl || null,
       applicantUid: user.uid,
       applicantName: values.fullName,
       applicantEmail: values.email,
