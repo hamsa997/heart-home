@@ -37,7 +37,6 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 src={pet.imageUrl || `https://picsum.photos/seed/${pet.id}/1200/800`}
                 alt={pet.petName}
                 fill
-                sizes="100vw"
                 className="object-cover"
                 unoptimized
               />
