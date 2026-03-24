@@ -38,7 +38,7 @@ export default function AdminApplications() {
   }, []);
 
   const formatDate = (dateString: string) => {
-    if (!mounted) return "...";
+    if (!mounted || !dateString) return "...";
     try {
       return new Date(dateString).toLocaleDateString();
     } catch {
