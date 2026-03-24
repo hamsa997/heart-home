@@ -21,25 +21,30 @@ export default function PetListing() {
 
   const filteredPets = useMemo(() => {
     return INITIAL_PETS.filter(pet => {
-      const matchesSearch = pet.name.toLowerCase().includes(search.toLowerCase()) || 
-                           pet.breed.toLowerCase().includes(search.toLowerCase());
-      const matchesSpecies = species === "all" || pet.species.toLowerCase() === species.toLowerCase();
+      const petName = pet.name?.toLowerCase() || "";
+      const petBreed = pet.breed?.toLowerCase() || "";
+      const petSpecies = pet.species?.toLowerCase() || "";
+      const petAge = pet.age?.toLowerCase() || "";
+
+      const matchesSearch = petName.includes(search.toLowerCase()) || 
+                           petBreed.includes(search.toLowerCase());
+      
+      const matchesSpecies = species === "all" || petSpecies === species.toLowerCase();
       
       let matchesAge = true;
       if (age !== "all") {
-        const petAgeLower = pet.age.toLowerCase();
         if (age === "younger") {
           // Matches kittens, puppies, or 1 year olds
-          matchesAge = petAgeLower.includes("kitten") || 
-                       petAgeLower.includes("puppy") || 
-                       petAgeLower.includes("1 year") ||
-                       petAgeLower.includes("month");
+          matchesAge = petAge.includes("kitten") || 
+                       petAge.includes("puppy") || 
+                       petAge.includes("1 year") ||
+                       petAge.includes("month");
         } else if (age === "adult") {
           // Matches 2+ years or explicitly "adult" or "senior"
-          const isOneYear = petAgeLower.includes("1 year");
-          matchesAge = (petAgeLower.includes("year") && !isOneYear) || 
-                       petAgeLower.includes("adult") || 
-                       petAgeLower.includes("senior");
+          const isOneYear = petAge.includes("1 year");
+          matchesAge = (petAge.includes("year") && !isOneYear) || 
+                       petAge.includes("adult") || 
+                       petAge.includes("senior");
         }
       }
       

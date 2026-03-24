@@ -19,13 +19,18 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
   const [isApplicationSent, setIsApplicationSent] = useState(false);
 
   if (!pet) {
-    return <div className="min-h-screen flex items-center justify-center">Pet not found</div>;
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
+        <h1 className="text-2xl font-bold">Buddy Not Found</h1>
+        <p className="text-muted-foreground">This pet might have already found their forever home.</p>
+        <Button asChild><Link href="/pets">Back to Listings</Link></Button>
+      </div>
+    );
   }
 
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
   const imageHint = `cartoon ${pet.species.toLowerCase()}`;
-  // Dynamically generate the image URL based on species and breed
-  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed);
+  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -59,16 +64,16 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <h1 className="text-5xl font-headline font-bold text-foreground">{pet.name}</h1>
+                    <h1 className="text-4xl md:text-5xl font-headline font-bold text-foreground">{pet.name}</h1>
                     <div className="bg-primary/10 p-2 rounded-xl">
                       <SpeciesIcon className="h-8 w-8 text-primary" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-muted-foreground font-medium">
+                  <div className="flex flex-wrap items-center gap-4 text-muted-foreground font-medium">
                     <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {pet.location}</span>
-                    <span>•</span>
+                    <span className="hidden md:inline">•</span>
                     <span>{pet.breed}</span>
-                    <span>•</span>
+                    <span className="hidden md:inline">•</span>
                     <span>{pet.age}</span>
                   </div>
                 </div>
@@ -78,7 +83,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
                 <div className="bg-white p-6 rounded-2xl border border-border space-y-1 text-center">
                   <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold">Gender</p>
                   <p className="text-lg font-headline font-bold text-primary">{pet.gender}</p>
@@ -106,7 +111,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 <div className="space-y-4">
                   <h3 className="text-xl font-headline font-bold">Personality Traits</h3>
                   <div className="flex flex-wrap gap-2">
-                    {pet.personalityTraits.map(trait => (
+                    {pet.personalityTraits?.map(trait => (
                       <Badge key={trait} variant="secondary" className="px-4 py-1.5 text-sm rounded-lg bg-secondary/50 text-primary border-none">
                         {trait}
                       </Badge>
@@ -116,7 +121,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 <div className="space-y-4">
                   <h3 className="text-xl font-headline font-bold">Ideal Home</h3>
                   <ul className="space-y-2">
-                    {pet.likes.map(like => (
+                    {pet.likes?.map(like => (
                       <li key={like} className="flex items-center gap-2 text-muted-foreground">
                         <CheckCircle2 className="h-4 w-4 text-accent" />
                         {like}

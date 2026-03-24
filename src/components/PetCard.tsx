@@ -12,9 +12,8 @@ interface PetCardProps {
 
 export function PetCard({ pet }: PetCardProps) {
   const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
-  const imageHint = `cartoon ${pet.species.toLowerCase()}`;
-  // Dynamically generate the image URL based on species and breed
-  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed);
+  const imageHint = `cartoon ${pet.species?.toLowerCase()}`;
+  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
 
   return (
     <Link href={`/pets/${pet.id}`}>
@@ -36,17 +35,17 @@ export function PetCard({ pet }: PetCardProps) {
         
         <CardContent className="p-6 flex-grow space-y-4">
           <div className="flex justify-between items-start">
-            <div className="space-y-1">
+            <div className="space-y-1 min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-2xl font-headline font-bold text-foreground truncate">{pet.name}</h3>
+                <h3 className="text-xl font-headline font-bold text-foreground truncate">{pet.name}</h3>
                 <div className="bg-primary/10 p-1 rounded-md shrink-0">
                   <SpeciesIcon className="h-4 w-4 text-primary" />
                 </div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground">{pet.breed} • {pet.age}</p>
+              <p className="text-sm font-medium text-muted-foreground truncate">{pet.breed} • {pet.age}</p>
             </div>
-            <button className="text-muted-foreground hover:text-destructive transition-colors shrink-0">
-              <Heart className="h-6 w-6" />
+            <button className="text-muted-foreground hover:text-destructive transition-colors shrink-0 ml-2">
+              <Heart className="h-5 w-5" />
             </button>
           </div>
           
@@ -56,7 +55,7 @@ export function PetCard({ pet }: PetCardProps) {
           
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <MapPin className="h-4 w-4" />
-            {pet.location}
+            <span className="truncate">{pet.location}</span>
           </div>
         </CardContent>
         

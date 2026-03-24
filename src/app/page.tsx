@@ -1,4 +1,3 @@
-
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Heart, Sparkles, Home as HomeIcon, Star, Quote, ArrowRight, ShieldCheck, Users } from "lucide-react";
@@ -145,7 +144,7 @@ export default function Home() {
               <Link href={`/pets/${pet.id}`} key={pet.id} className="group">
                 <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-lg border border-white">
                   <Image 
-                    src={getPetImageUrl(pet.species, pet.breed)}
+                    src={getPetImageUrl(pet.species, pet.breed, pet.name)}
                     alt={pet.name}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700"

@@ -1,5 +1,4 @@
-
-import { PlaceHolderImages } from "./placeholder-images";
+import { getPetImageUrl } from "@/lib/utils";
 
 export type PetStatus = "Available" | "Pending" | "Adopted";
 
@@ -32,8 +31,6 @@ export interface Application {
   submittedAt: string;
 }
 
-const images = Array.isArray(PlaceHolderImages) ? PlaceHolderImages : [];
-
 export const INITIAL_PETS: Pet[] = [
   {
     id: "1",
@@ -49,7 +46,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Sunbathing", "Salmon treats", "String toys"],
     dislikes: ["Loud vacuums", "Cold floors"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-luna")?.imageUrl || "https://picsum.photos/seed/luna-cat/600/400"
+    imageUrl: getPetImageUrl("Cat", "Siamese Mix", "Luna")
   },
   {
     id: "2",
@@ -65,7 +62,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Fetch", "Swimming", "Belly rubs"],
     dislikes: ["Being alone for too long"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-cooper")?.imageUrl || "https://picsum.photos/seed/cooper-dog/600/400"
+    imageUrl: getPetImageUrl("Dog", "Golden Retriever", "Cooper")
   },
   {
     id: "3",
@@ -81,7 +78,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Head scratches", "Large cat trees", "Grooming"],
     dislikes: ["Small spaces"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-milo")?.imageUrl || "https://picsum.photos/seed/milo-cat/600/400"
+    imageUrl: getPetImageUrl("Cat", "Maine Coon", "Milo")
   },
   {
     id: "4",
@@ -97,7 +94,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Training", "Frisbee", "Long walks"],
     dislikes: ["Boredom"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-bella")?.imageUrl || "https://picsum.photos/seed/bella-dog/600/400"
+    imageUrl: getPetImageUrl("Dog", "Border Collie", "Bella")
   },
   {
     id: "5",
@@ -113,7 +110,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Laser pointers", "Catnip", "High perches"],
     dislikes: ["Rain", "Closed doors"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-oliver")?.imageUrl || "https://picsum.photos/seed/oliver-cat/600/400"
+    imageUrl: getPetImageUrl("Cat", "Tabby", "Oliver")
   },
   {
     id: "6",
@@ -129,7 +126,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Tracking scents", "Snuggling", "Car rides"],
     dislikes: ["Thunderstorms", "Being ignored"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-daisy")?.imageUrl || "https://picsum.photos/seed/daisy-dog/600/400"
+    imageUrl: getPetImageUrl("Dog", "Beagle", "Daisy")
   },
   {
     id: "7",
@@ -145,7 +142,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Premium food", "Being brushed", "Soft blankets"],
     dislikes: ["Dogs", "Loud music"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-snowball")?.imageUrl || "https://picsum.photos/seed/snowball-cat/600/400"
+    imageUrl: getPetImageUrl("Cat", "Persian", "Snowball")
   },
   {
     id: "8",
@@ -161,7 +158,7 @@ export const INITIAL_PETS: Pet[] = [
     likes: ["Tennis balls", "Water", "Snacks"],
     dislikes: ["Empty bowls"],
     status: "Available",
-    imageUrl: images.find(img => img.id === "pet-rex")?.imageUrl || "https://picsum.photos/seed/rex-dog/600/400"
+    imageUrl: getPetImageUrl("Dog", "Labrador", "Rex")
   }
 ];
 
