@@ -11,9 +11,12 @@ interface PetCardProps {
 }
 
 export function PetCard({ pet }: PetCardProps) {
-  const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
-  const imageHint = `cartoon ${pet.species?.toLowerCase()}`;
-  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+  if (!pet) return null;
+
+  const species = pet.species || "Dog";
+  const SpeciesIcon = species === "Dog" ? Dog : Cat;
+  const imageHint = `cartoon ${species.toLowerCase()}`;
+  const dynamicImageUrl = pet.imageUrl || getPetImageUrl(species, pet.breed, pet.name);
 
   return (
     <Link href={`/pets/${pet.id}`}>
@@ -21,14 +24,14 @@ export function PetCard({ pet }: PetCardProps) {
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image 
             src={dynamicImageUrl}
-            alt={`${pet.name} - ${pet.breed}`}
+            alt={`${pet.name || 'Pet'} - ${pet.breed || 'Mixed'}`}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             data-ai-hint={imageHint}
           />
           <div className="absolute top-4 left-4 flex gap-2">
             <Badge variant={pet.status === "Available" ? "default" : "secondary"} className={pet.status === "Available" ? "bg-accent hover:bg-accent" : ""}>
-              {pet.status}
+              {pet.status || "Available"}
             </Badge>
           </div>
         </div>
@@ -37,12 +40,12 @@ export function PetCard({ pet }: PetCardProps) {
           <div className="flex justify-between items-start">
             <div className="space-y-1 min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-xl font-headline font-bold text-foreground truncate">{pet.name}</h3>
+                <h3 className="text-xl font-headline font-bold text-foreground truncate">{pet.name || 'Buddy'}</h3>
                 <div className="bg-primary/10 p-1 rounded-md shrink-0">
                   <SpeciesIcon className="h-4 w-4 text-primary" />
                 </div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground truncate">{pet.breed} • {pet.age}</p>
+              <p className="text-sm font-medium text-muted-foreground truncate">{pet.breed || 'Mixed'} • {pet.age || 'Unknown age'}</p>
             </div>
             <button className="text-muted-foreground hover:text-destructive transition-colors shrink-0 ml-2">
               <Heart className="h-5 w-5" />
@@ -50,12 +53,12 @@ export function PetCard({ pet }: PetCardProps) {
           </div>
           
           <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-            {pet.description}
+            {pet.description || "No description available."}
           </p>
           
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <MapPin className="h-4 w-4" />
-            <span className="truncate">{pet.location}</span>
+            <span className="truncate">{pet.location || "Sanctuary"}</span>
           </div>
         </CardContent>
         

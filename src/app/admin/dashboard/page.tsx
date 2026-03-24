@@ -15,8 +15,12 @@ export default function AdminDashboard() {
   }, []);
 
   const formatDate = (dateString: string) => {
-    if (!mounted) return "...";
-    return new Date(dateString).toLocaleDateString();
+    if (!mounted || !dateString) return "...";
+    try {
+      return new Date(dateString).toLocaleDateString();
+    } catch {
+      return "N/A";
+    }
   };
 
   const stats = [
@@ -81,23 +85,23 @@ export default function AdminDashboard() {
           <CardContent>
              <div className="space-y-4">
               {INITIAL_PETS.slice(0, 3).map(pet => {
-                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed);
+                const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
                 return (
                   <div key={pet.id} className="flex items-center gap-3 md:gap-4 p-3 md:p-4 bg-muted/30 rounded-xl">
                     <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-lg overflow-hidden shrink-0">
                       <Image 
                         src={dynamicImageUrl} 
-                        alt={pet.name} 
+                        alt={pet.name || 'Pet'} 
                         fill 
                         className="object-cover" 
-                        data-ai-hint={`cartoon ${pet.species.toLowerCase()}`}
+                        data-ai-hint={`cartoon ${(pet.species || 'pet').toLowerCase()}`}
                       />
                     </div>
                     <div className="flex-grow min-w-0">
-                      <p className="font-bold truncate">{pet.name}</p>
-                      <p className="text-xs md:text-sm text-muted-foreground truncate">{pet.species} • {pet.breed}</p>
+                      <p className="font-bold truncate">{pet.name || 'Buddy'}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground truncate">{pet.species || 'Pet'} • {pet.breed || 'Mixed'}</p>
                     </div>
-                    <span className="text-[10px] md:text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold shrink-0">{pet.status}</span>
+                    <span className="text-[10px] md:text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold shrink-0">{pet.status || 'Available'}</span>
                   </div>
                 );
               })}
