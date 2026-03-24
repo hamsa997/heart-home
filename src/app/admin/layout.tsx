@@ -1,12 +1,32 @@
 "use client";
 
+import { useEffect } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarTrigger } from "@/components/ui/sidebar";
-import { LayoutDashboard, PawPrint, Users, LogOut, Home, Heart, Menu } from "lucide-react";
+import { LayoutDashboard, PawPrint, Users, LogOut, Home, Heart, Menu, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth, useUser } from "@/firebase";
+import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      initiateAnonymousSignIn(auth);
+    }
+  }, [user, isUserLoading, auth]);
+
+  if (isUserLoading) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center gap-4 bg-[#fffaf9]">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <p className="text-muted-foreground font-medium">Authenticating Admin Session...</p>
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>

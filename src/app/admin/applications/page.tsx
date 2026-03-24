@@ -14,15 +14,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Search, Eye, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
-import { collection, doc } from "firebase/firestore";
+import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useUser } from "@/firebase";
+import { collection, doc, query, limit } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AdminApplications() {
   const [mounted, setMounted] = useState(false);
   const db = useFirestore();
+  const { user } = useUser();
   const { toast } = useToast();
-  const appsRef = useMemoFirebase(() => collection(db, "adoptionApplications"), [db]);
+  
+  const appsRef = useMemoFirebase(() => {
+    if (!user) return null;
+    return query(collection(db, "adoptionApplications"), limit(100));
+  }, [db, user]);
+  
   const { data: applications, isLoading } = useCollection(appsRef);
 
   useEffect(() => {
@@ -97,7 +103,7 @@ export default function AdminApplications() {
           </div>
         </div>
         <CardContent className="p-0 overflow-x-auto">
-          {isLoading ? (
+          {isLoading || !user ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>

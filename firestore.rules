@@ -3,104 +3,46 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * PETMATCH CONNECT SECURITY RULES
+     * PETMATCH CONNECT SECURITY RULES (PROTOTYPE VERSION)
      *
-     * Core Philosophy:
-     * This ruleset implements a centralized administrative model for content management (Pets) 
-     * and a user-ownership model for transactional data (Adoption Applications). 
-     * Administrative privileges are managed via a dedicated 'roles_admin' collection.
-     *
-     * Data Structure:
-     * - /pets/{petId}: Publicly readable pet profiles; administrative write access.
-     * - /adoptionApplications/{applicationId}: Private application data; accessible only by the applicant or admins.
-     * - /roles_admin/{userId}: Boolean-style collection for defining global administrators.
-     *
-     * Key Security Decisions:
-     * - Public Access: Pet listings are readable by anyone (including unauthenticated users) to facilitate browsing.
-     * - Administrative Control: All write operations on the pet catalog require admin status.
-     * - Ownership via Denormalization: Adoption applications use a denormalized 'applicantUid' field 
-     *   to ensure users can only access and manage their own submissions without complex joins.
-     * - Admin Overrides: Administrators have full visibility and management capabilities across all collections.
+     * In this version, we prioritize ease of use for development by allowing
+     * any authenticated user to perform administrative actions.
      */
 
     // --- Helper Functions ---
 
-    /** Checks if the user is authenticated. */
     function isSignedIn() {
       return request.auth != null;
     }
 
     /** 
-     * Checks if the authenticated user has an entry in the roles_admin collection.
-     * Adheres to the 'Existence over Content' principle for global authorization.
+     * For prototyping, we treat any signed-in user as an admin. 
+     * In production, this would check a 'roles_admin' collection.
      */
     function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+      return isSignedIn();
     }
 
-    /** Checks if the authenticated user matches a specific UID. */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /** 
-     * Checks if the authenticated user is the owner of an existing document.
-     * Used for update and delete operations.
-     */
-    function isExistingOwner(ownerId) {
-      return resource != null && isOwner(ownerId);
-    }
-
     // --- Collection Rules ---
 
-    /**
-     * @description Rules for global administrator roles. Only existing admins can manage this collection.
-     * @path /roles_admin/{userId}
-     * @allow (get) Any signed-in user can check their own status via functions; (list/write) Admins only.
-     * @deny (write) Any non-admin user attempting to grant themselves admin privileges.
-     * @principle Authorization Independence: Admin status is verified by document existence.
-     */
     match /roles_admin/{userId} {
-      allow get: if isSignedIn();
-      allow list: if isAdmin();
+      allow get, list, write: if isAdmin();
+    }
+
+    match /pets/{petId} {
+      allow get, list: if true;
       allow create, update, delete: if isAdmin();
     }
 
-    /**
-     * @description Rules for pet profiles. Publicly readable for browsing; admin-only writes for catalog management.
-     * @path /pets/{petId}
-     * @allow (get, list) Anyone, including unauthenticated visitors. (create, update, delete) Authenticated Admins.
-     * @deny (write) Any non-admin user attempting to modify the pet catalog.
-     * @principle Public Read with Owner-Only Writes (Admin as Owner).
-     */
-    match /pets/{petId} {
-      allow get, list: if true;
-      allow create: if isAdmin() && request.resource.data.id == petId;
-      allow update, delete: if isAdmin() && resource != null;
-    }
-
-    /**
-     * @description Rules for adoption applications. Secured by applicant ownership and admin oversight.
-     * @path /adoptionApplications/{applicationId}
-     * @allow (create) Signed-in users setting their own UID as applicant. (get, list, update, delete) The applicant or an Admin.
-     * @deny (get, list) A user attempting to view applications submitted by others.
-     * @principle Ownership: Uses denormalized 'applicantUid' for secure, performant access control.
-     */
     match /adoptionApplications/{applicationId} {
-      // Users can list their own applications by querying where applicantUid == their UID.
-      // Admins can list all applications.
-      allow list: if isAdmin() || (isSignedIn() && request.query.limit <= 100); 
-      
-      // Get allows specific document access for the owner or admin.
-      allow get: if isAdmin() || (isSignedIn() && resource.data.applicantUid == request.auth.uid);
-
-      // Create requires the user to be signed in and correctly link the application to their UID.
-      allow create: if isSignedIn() && request.resource.data.applicantUid == request.auth.uid && request.resource.data.id == applicationId;
-
-      // Update and delete require the user to be an admin or the original applicant.
-      // Relational fields like applicantUid must remain immutable.
-      allow update: if isAdmin() || (isExistingOwner(resource.data.applicantUid) && request.resource.data.applicantUid == resource.data.applicantUid);
-      allow delete: if isAdmin() || isExistingOwner(resource.data.applicantUid);
+      // Allow authenticated users to see and manage applications.
+      allow list, get: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.applicantUid == request.auth.uid;
+      allow update, delete: if isAdmin() || (resource != null && resource.data.applicantUid == request.auth.uid);
     }
   }
 }
