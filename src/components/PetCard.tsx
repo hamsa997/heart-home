@@ -27,6 +27,7 @@ export function PetCard({ pet }: PetCardProps) {
             src={pet.imageUrl || `https://picsum.photos/seed/${pet.id}/600/800`}
             alt={pet.petName}
             fill
+            sizes="100vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             unoptimized
           />

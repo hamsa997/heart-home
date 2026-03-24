@@ -5,7 +5,7 @@ import { Navigation } from "@/components/Navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Info, CheckCircle2, ArrowLeft, Phone, Mail, User } from "lucide-react";
+import { MapPin, Info, CheckCircle2, ArrowLeft, Phone, Mail, User, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -37,6 +37,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 src={pet.imageUrl || `https://picsum.photos/seed/${pet.id}/1200/800`}
                 alt={pet.petName}
                 fill
+                sizes="100vw"
                 className="object-cover"
                 unoptimized
               />
@@ -138,4 +139,3 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
     </div>
   );
 }
-import { Loader2 } from "lucide-react";
