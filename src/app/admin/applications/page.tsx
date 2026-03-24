@@ -1,3 +1,3 @@
-export default function AdminApplicationsPlaceholder() {
+export default function AdminApplicationsPage() {
   return null;
 }

@@ -1,3 +1,3 @@
-export default function AdminNewPetPlaceholder() {
+export default function AdminNewPetPage() {
   return null;
 }

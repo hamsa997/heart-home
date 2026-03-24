@@ -1,3 +1,3 @@
-export default function AdminDashboardPlaceholder() {
+export default function AdminDashboardPage() {
   return null;
 }
