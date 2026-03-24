@@ -3,46 +3,33 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * PETMATCH CONNECT SECURITY RULES (PROTOTYPE VERSION)
+     * HEARTHOME SECURITY RULES (PUBLIC VERSION)
      *
-     * In this version, we prioritize ease of use for development by allowing
-     * any authenticated user to perform administrative actions.
+     * Rules optimized for a public adoption system.
      */
-
-    // --- Helper Functions ---
 
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** 
-     * For prototyping, we treat any signed-in user as an admin. 
-     * In production, this would check a 'roles_admin' collection.
-     */
-    function isAdmin() {
-      return isSignedIn();
-    }
-
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
     // --- Collection Rules ---
 
-    match /roles_admin/{userId} {
-      allow get, list, write: if isAdmin();
-    }
-
     match /pets/{petId} {
+      // Anyone can browse available pets.
       allow get, list: if true;
-      allow create, update, delete: if isAdmin();
+      // In this public-only version, admin updates are disabled via rules for security.
+      allow write: if false;
     }
 
     match /adoptionApplications/{applicationId} {
-      // Allow authenticated users to see and manage applications.
-      allow list, get: if isSignedIn();
-      allow create: if isSignedIn() && request.resource.data.applicantUid == request.auth.uid;
-      allow update, delete: if isAdmin() || (resource != null && resource.data.applicantUid == request.auth.uid);
+      // Anyone can submit an adoption request.
+      allow create: if true;
+      // In this version, viewing applications is restricted.
+      allow read, update, delete: if false;
+    }
+    
+    match /roles_admin/{userId} {
+      allow read, write: if false;
     }
   }
 }
