@@ -22,6 +22,8 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
   if (isLoading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary h-12 w-12" /></div>;
   if (!pet) return <div className="h-screen flex items-center justify-center">Pet not found.</div>;
 
+  const altText = pet.petName ? `Portrait of ${pet.petName}` : "Pet portrait";
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -35,7 +37,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
             <div className="relative aspect-[16/9] rounded-[2rem] overflow-hidden shadow-xl">
               <Image 
                 src={pet.imageUrl || `https://picsum.photos/seed/${pet.id}/1200/800`}
-                alt={pet.petName}
+                alt={altText}
                 fill
                 className="object-cover"
                 unoptimized

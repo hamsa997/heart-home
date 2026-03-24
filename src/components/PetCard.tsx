@@ -19,13 +19,15 @@ interface PetCardProps {
 }
 
 export function PetCard({ pet }: PetCardProps) {
+  const altText = pet.petName ? `${pet.petName}, a ${pet.breed}` : "Pet portrait";
+
   return (
     <Link href={`/pets/${pet.id}`} className="group block h-full">
       <Card className="rounded-[2rem] overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
         <div className="relative aspect-[4/5] overflow-hidden">
           <Image 
             src={pet.imageUrl || `https://picsum.photos/seed/${pet.id}/600/800`}
-            alt={pet.petName}
+            alt={altText}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             unoptimized
@@ -39,7 +41,7 @@ export function PetCard({ pet }: PetCardProps) {
         
         <CardContent className="p-6 flex-grow space-y-2">
           <div className="flex justify-between items-center">
-            <h3 className="text-xl font-bold truncate">{pet.petName}</h3>
+            <h3 className="text-xl font-bold truncate">{pet.petName || "Buddy"}</h3>
             <Heart className="h-5 w-5 text-muted-foreground hover:text-accent transition-colors" />
           </div>
           <p className="text-muted-foreground font-medium">{pet.breed} • {pet.age}</p>
