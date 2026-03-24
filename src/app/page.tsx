@@ -54,13 +54,13 @@ export default function Home() {
               <div className="absolute -inset-10 bg-primary/20 rounded-full blur-[100px] -z-10 opacity-50"></div>
               <div className="rounded-[2.5rem] md:rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.15)] border-4 md:border-[12px] border-white md:rotate-2 hover:rotate-0 transition-transform duration-700">
                 <Image 
-                  src="https://picsum.photos/seed/heart-dog/800/1000"
-                  alt="A girl hugging her newly adopted dog"
+                  src="https://picsum.photos/seed/happy-dog-hero/800/1000"
+                  alt="A happy dog ready for its forever home"
                   width={800}
                   height={1000}
                   className="object-cover h-[400px] md:h-[600px] w-full"
                   priority
-                  data-ai-hint="happy pet"
+                  data-ai-hint="happy dog"
                 />
               </div>
               {/* Floating Badge - Hidden on small mobile, adjusted positioning */}

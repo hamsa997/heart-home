@@ -5,6 +5,7 @@ import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Heart, Search, MessageSquare, Home, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HowItWorks() {
   const steps = [
@@ -112,10 +113,13 @@ export default function HowItWorks() {
               <div className="relative">
                 <div className="absolute -inset-4 bg-primary/20 rounded-full blur-3xl opacity-30 -z-10 animate-pulse"></div>
                 <div className="rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
-                  <img 
-                    src="https://picsum.photos/seed/adoption-journey/800/1000" 
-                    alt="Happy pet adoption"
+                  <Image 
+                    src="https://picsum.photos/seed/dog-love/800/1000" 
+                    alt="A happy adopted dog"
+                    width={800}
+                    height={1000}
                     className="w-full h-[500px] object-cover"
+                    data-ai-hint="happy dog"
                   />
                 </div>
               </div>
