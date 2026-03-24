@@ -8,6 +8,7 @@
         "ownerName": { "type": "string" },
         "ownerEmail": { "type": "string" },
         "ownerPhone": { "type": "string" },
+        "ownerUid": { "type": "string" },
         "city": { "type": "string" },
         "petName": { "type": "string" },
         "type": { "type": "string" },
@@ -23,7 +24,7 @@
         "status": { "type": "string", "default": "Available" },
         "createdAt": { "type": "string" }
       },
-      "required": ["id", "ownerName", "ownerEmail", "petName", "type", "city"]
+      "required": ["ownerName", "ownerEmail", "petName", "type", "city"]
     },
     "AdoptionRequest": {
       "title": "AdoptionRequest",
@@ -44,5 +45,18 @@
         "submittedAt": { "type": "string" }
       }
     }
+  },
+  "firestore": {
+    "/pets/{petId}": {
+      "schema": "Pet",
+      "description": "Public pet listings posted by owners"
+    },
+    "/adoptionRequests/{requestId}": {
+      "schema": "AdoptionRequest",
+      "description": "Direct adoption inquiries sent from adopters to pet owners"
+    }
+  },
+  "auth": {
+    "providers": ["anonymous", "google"]
   }
 }
