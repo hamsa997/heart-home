@@ -24,7 +24,8 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, ArrowLeft, Loader2, PawPrint, ImageIcon, Wand2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Sparkles, ArrowLeft, Loader2, PawPrint, ImageIcon, Wand2, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { generatePetDescription } from "@/ai/flows/generate-pet-description";
@@ -35,17 +36,17 @@ import { doc, collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 const petFormSchema = z.object({
-  name: z.string().min(2),
-  species: z.enum(["dog", "cat"]),
-  breed: z.string().optional(),
-  age: z.string().min(1),
+  name: z.string().min(2, "Name is required"),
+  species: z.enum(["dog", "cat", "bird", "rabbit"]),
+  breed: z.string().min(2, "Breed is required"),
+  age: z.string().min(1, "Age is required"),
   gender: z.string().min(1),
   size: z.string().optional(),
-  personalityTraits: z.string().describe("Comma separated traits"),
-  likes: z.string().describe("Comma separated likes"),
+  personalityTraits: z.string().optional(),
+  likes: z.string().optional(),
   story: z.string().optional(),
-  description: z.string().min(10),
-  imageUrl: z.string().min(1, "A pet photo is required"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  imageUrl: z.string().url("Please provide a valid image URL"),
   imageStyle: z.enum(["realistic", "cartoon", "artistic"]).default("cartoon"),
 });
 
@@ -62,11 +63,11 @@ export default function NewPetPage() {
       name: "",
       species: "dog",
       breed: "",
-      age: "2 years",
+      age: "",
       gender: "male",
       size: "medium",
-      personalityTraits: "playful, loving, active",
-      likes: "long walks, treats, belly rubs",
+      personalityTraits: "",
+      likes: "",
       story: "",
       description: "",
       imageUrl: "",
@@ -76,10 +77,10 @@ export default function NewPetPage() {
 
   const handleAiGenerateDesc = async () => {
     const values = form.getValues();
-    if (!values.name || !values.species) {
+    if (!values.name || !values.breed) {
       toast({
         title: "Missing Info",
-        description: "Please enter at least a name and species for AI to generate a description.",
+        description: "Please enter at least a name and breed for AI to generate a description.",
         variant: "destructive",
       });
       return;
@@ -89,13 +90,13 @@ export default function NewPetPage() {
     try {
       const result = await generatePetDescription({
         name: values.name,
-        species: values.species,
+        species: values.species === "dog" || values.species === "cat" ? values.species : "dog",
         breed: values.breed,
-        age: values.age,
+        age: values.age + " years",
         gender: values.gender,
         size: values.size,
-        personalityTraits: values.personalityTraits.split(",").map(s => s.trim()),
-        likes: values.likes.split(",").map(s => s.trim()),
+        personalityTraits: values.personalityTraits?.split(",").map(s => s.trim()) || [],
+        likes: values.likes?.split(",").map(s => s.trim()) || [],
         story: values.story,
       });
       
@@ -105,7 +106,6 @@ export default function NewPetPage() {
         description: "Review and edit the generated description below.",
       });
     } catch (error) {
-      console.error(error);
       toast({
         title: "Generation Failed",
         description: "Something went wrong while using AI. Please try again.",
@@ -118,10 +118,10 @@ export default function NewPetPage() {
 
   const handleAiGenerateImg = async () => {
     const values = form.getValues();
-    if (!values.species) {
+    if (!values.species || !values.breed) {
       toast({
         title: "Missing Info",
-        description: "Please select a species first.",
+        description: "Please provide species and breed for the AI artist.",
         variant: "destructive",
       });
       return;
@@ -130,9 +130,9 @@ export default function NewPetPage() {
     setIsGeneratingImg(true);
     try {
       const result = await generatePetImage({
-        species: values.species,
+        species: values.species === "dog" || values.species === "cat" ? values.species : "dog",
         breed: values.breed,
-        personalityTraits: values.personalityTraits.split(",").map(s => s.trim()),
+        personalityTraits: values.personalityTraits?.split(",").map(s => s.trim()) || [],
         style: values.imageStyle,
       });
       
@@ -142,7 +142,6 @@ export default function NewPetPage() {
         description: "A magical portrait has been created for your buddy.",
       });
     } catch (error) {
-      console.error(error);
       toast({
         title: "Generation Failed",
         description: "Image generation failed. Please try again.",
@@ -158,14 +157,14 @@ export default function NewPetPage() {
     const petData = {
       id: newPetRef.id,
       name: values.name,
-      species: values.species === "dog" ? "Dog" : "Cat",
-      breed: values.breed || "Mixed",
+      species: values.species.charAt(0).toUpperCase() + values.species.slice(1),
+      breed: values.breed,
       ageInYears: parseInt(values.age) || 0,
       gender: values.gender,
       isAvailable: true,
       description: values.description,
-      personalityTraits: values.personalityTraits.split(",").map(s => s.trim()),
-      adoptionRequirements: values.likes.split(",").map(s => s.trim()),
+      personalityTraits: values.personalityTraits?.split(",").map(s => s.trim()) || [],
+      adoptionRequirements: values.likes?.split(",").map(s => s.trim()) || [],
       mainPhotoUrl: values.imageUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -175,7 +174,7 @@ export default function NewPetPage() {
     
     toast({
       title: "Pet Profile Created!",
-      description: `${values.name} has been added to the system.`,
+      description: `${values.name} has been added to the database.`,
     });
     router.push("/admin/pets");
   };
@@ -219,7 +218,7 @@ export default function NewPetPage() {
                     name="species"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Species</FormLabel>
+                        <FormLabel>Type</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="rounded-xl h-12">
@@ -229,6 +228,8 @@ export default function NewPetPage() {
                           <SelectContent>
                             <SelectItem value="dog">Dog</SelectItem>
                             <SelectItem value="cat">Cat</SelectItem>
+                            <SelectItem value="bird">Bird</SelectItem>
+                            <SelectItem value="rabbit">Rabbit</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -240,7 +241,7 @@ export default function NewPetPage() {
                     name="breed"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Breed (Optional)</FormLabel>
+                        <FormLabel>Breed</FormLabel>
                         <FormControl><Input placeholder="e.g. Labrador Mix" {...field} className="rounded-xl h-12" /></FormControl>
                         <FormMessage />
                       </FormItem>
@@ -253,51 +254,6 @@ export default function NewPetPage() {
                       <FormItem>
                         <FormLabel>Age (Years)</FormLabel>
                         <FormControl><Input placeholder="e.g. 3" type="number" {...field} className="rounded-xl h-12" /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="gender"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Gender</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="rounded-xl h-12">
-                              <SelectValue placeholder="Select gender" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="unknown">Unknown</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="size"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Size</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="rounded-xl h-12">
-                              <SelectValue placeholder="Select size" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="small">Small</SelectItem>
-                            <SelectItem value="medium">Medium</SelectItem>
-                            <SelectItem value="large">Large</SelectItem>
-                            <SelectItem value="extra-large">Extra Large</SelectItem>
-                          </SelectContent>
-                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -320,53 +276,16 @@ export default function NewPetPage() {
                   </Button>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="personalityTraits"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Personality Traits</FormLabel>
-                          <FormControl><Input placeholder="Friendly, calm, brave..." {...field} className="rounded-xl h-12" /></FormControl>
-                          <FormDescription>Separate by commas</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="likes"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Adoption Requirements</FormLabel>
-                          <FormControl><Input placeholder="Fenced yard, patient owner..." {...field} className="rounded-xl h-12" /></FormControl>
-                          <FormDescription>Separate by commas</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <FormField
-                    control={form.control}
-                    name="story"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Pet Story / Background (Optional)</FormLabel>
-                        <FormControl><Textarea placeholder="Brief anecdote or how they came to the sanctuary..." className="rounded-2xl min-h-[80px]" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                   <FormField
                     control={form.control}
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Full Public Description</FormLabel>
+                        <FormLabel>Pet Description</FormLabel>
                         <FormControl>
                           <Textarea 
                             placeholder="Detailed profile text that adopters will see..." 
-                            className="rounded-2xl min-h-[300px] leading-relaxed text-base p-6" 
+                            className="rounded-2xl min-h-[250px] leading-relaxed text-base p-6" 
                             {...field} 
                           />
                         </FormControl>
@@ -391,6 +310,7 @@ export default function NewPetPage() {
                         alt="Preview" 
                         fill 
                         className="object-cover animate-in fade-in duration-1000"
+                        unoptimized
                       />
                     ) : (
                       <div className="text-center p-6 space-y-4">
@@ -399,7 +319,7 @@ export default function NewPetPage() {
                         </div>
                         <div className="space-y-1">
                           <p className="font-bold text-foreground">No portrait yet</p>
-                          <p className="text-xs text-muted-foreground">Choose a style and generate!</p>
+                          <p className="text-xs text-muted-foreground">Upload or generate!</p>
                         </div>
                       </div>
                     )}
@@ -408,60 +328,71 @@ export default function NewPetPage() {
                         <Loader2 className="h-12 w-12 text-primary animate-spin" />
                         <div className="space-y-1">
                           <p className="font-headline font-bold text-lg">Creating Magic...</p>
-                          <p className="text-sm text-muted-foreground">Our AI artist is painting a masterpiece</p>
                         </div>
                       </div>
                     )}
                   </div>
 
-                  <div className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="imageStyle"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Artistic Style</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Tabs defaultValue="manual" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 rounded-xl h-12 bg-muted/50 p-1">
+                      <TabsTrigger value="manual" className="rounded-lg">Manual URL</TabsTrigger>
+                      <TabsTrigger value="ai" className="rounded-lg">AI Artist</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="manual" className="pt-4 space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="imageUrl"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-xs uppercase tracking-wider opacity-60">Image Address</FormLabel>
                             <FormControl>
-                              <SelectTrigger className="rounded-xl h-11">
-                                <SelectValue placeholder="Select style" />
-                              </SelectTrigger>
+                              <div className="relative">
+                                <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input placeholder="https://example.com/photo.jpg" {...field} className="pl-10 rounded-xl h-11" />
+                              </div>
                             </FormControl>
-                            <SelectContent>
-                              <SelectItem value="cartoon">Charming Cartoon</SelectItem>
-                              <SelectItem value="realistic">Natural Realistic</SelectItem>
-                              <SelectItem value="artistic">Digital Painting</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                      )}
-                    />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
+                    <TabsContent value="ai" className="pt-4 space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="imageStyle"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-xs uppercase tracking-wider opacity-60">Artistic Style</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger className="rounded-xl h-11">
+                                  <SelectValue placeholder="Select style" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="cartoon">Charming Cartoon</SelectItem>
+                                <SelectItem value="realistic">Natural Realistic</SelectItem>
+                                <SelectItem value="artistic">Digital Painting</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                        )}
+                      />
+                      <Button 
+                        type="button" 
+                        className="w-full h-12 rounded-xl bg-accent hover:bg-accent/90 text-white shadow-lg flex items-center justify-center gap-3 group transition-all"
+                        onClick={handleAiGenerateImg}
+                        disabled={isGeneratingImg}
+                      >
+                        <Wand2 className="h-5 w-5 group-hover:rotate-12 transition-transform" />
+                        Generate AI Portrait
+                      </Button>
+                    </TabsContent>
+                  </Tabs>
 
-                    <Button 
-                      type="button" 
-                      className="w-full h-14 rounded-full bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20 flex items-center justify-center gap-3 group transition-all"
-                      onClick={handleAiGenerateImg}
-                      disabled={isGeneratingImg}
-                    >
-                      <Wand2 className="h-5 w-5 group-hover:rotate-12 transition-transform" />
-                      Generate AI Portrait
-                    </Button>
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="imageUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl><Input type="hidden" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="pt-4 space-y-4">
-                    <Button type="submit" className="w-full h-14 rounded-full bg-foreground text-background font-bold text-lg hover:opacity-90">
-                      Publish Profile
+                  <div className="pt-6 border-t border-border space-y-4">
+                    <Button type="submit" className="w-full h-14 rounded-full bg-primary text-white font-bold text-lg hover:opacity-90 shadow-xl shadow-primary/20">
+                      Save Pet Details
                     </Button>
                     <Button asChild variant="ghost" className="w-full h-12 rounded-full">
                       <Link href="/admin/pets">Cancel</Link>
