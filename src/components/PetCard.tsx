@@ -1,5 +1,5 @@
 import { Pet } from "@/app/lib/mock-data";
-import { Badge } from "@/badge";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { MapPin, Heart, ArrowRight, Dog, Cat } from "lucide-react";
 import Image from "next/image";

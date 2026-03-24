@@ -10,7 +10,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Badge } from "@/badge";
+import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Search, MoreHorizontal, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
