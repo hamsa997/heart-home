@@ -2,21 +2,33 @@
 
 import { use, useState } from "react";
 import { Navigation } from "@/components/Navigation";
-import { INITIAL_PETS, Pet } from "@/app/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Heart, Info, CheckCircle2, Share2, ArrowLeft, Dog, Cat } from "lucide-react";
+import { MapPin, Heart, Info, CheckCircle2, Share2, ArrowLeft, Dog, Cat, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { AdoptionForm } from "@/components/AdoptionForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { getPetImageUrl } from "@/lib/utils";
+import { useDoc, useFirestore, useMemoFirebase } from "@/firebase";
+import { doc } from "firebase/firestore";
 
 export default function PetDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const pet = INITIAL_PETS.find(p => p.id === id);
+  const db = useFirestore();
+  const petRef = useMemoFirebase(() => doc(db, "pets", id), [db, id]);
+  const { data: pet, isLoading } = useDoc(petRef);
   const [isApplicationSent, setIsApplicationSent] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-muted-foreground font-medium">Getting buddy details...</p>
+      </div>
+    );
+  }
 
   if (!pet) {
     return (
@@ -28,9 +40,9 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
     );
   }
 
-  const SpeciesIcon = pet.species === "Dog" ? Dog : Cat;
-  const imageHint = `cartoon ${pet.species.toLowerCase()}`;
-  const dynamicImageUrl = getPetImageUrl(pet.species, pet.breed, pet.name);
+  const SpeciesIcon = pet.species?.toLowerCase() === "cat" ? Cat : Dog;
+  const imageHint = `cartoon ${pet.species?.toLowerCase()}`;
+  const dynamicImageUrl = pet.mainPhotoUrl || getPetImageUrl(pet.species || "dog", pet.breed || "mixed", pet.name);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -43,7 +55,6 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
         </Link>
 
         <div className="grid lg:grid-cols-3 gap-12">
-          {/* Main Content (Left 2 cols) */}
           <div className="lg:col-span-2 space-y-8">
             <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
               <Image 
@@ -55,7 +66,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
               />
               <div className="absolute top-6 left-6 flex gap-2">
                 <Badge className="bg-white/90 text-primary text-md px-4 py-1.5 shadow-lg backdrop-blur-sm border-none hover:bg-white/90">
-                  {pet.status}
+                  {pet.isAvailable ? "Available" : "Adopted"}
                 </Badge>
               </div>
             </div>
@@ -70,11 +81,11 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-4 text-muted-foreground font-medium">
-                    <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {pet.location}</span>
+                    <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {pet.location || "Sanctuary"}</span>
                     <span className="hidden md:inline">•</span>
-                    <span>{pet.breed}</span>
+                    <span>{pet.breed || "Mixed"}</span>
                     <span className="hidden md:inline">•</span>
-                    <span>{pet.age}</span>
+                    <span>{pet.ageInYears} years</span>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -89,8 +100,8 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                   <p className="text-lg font-headline font-bold text-primary">{pet.gender}</p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-border space-y-1 text-center">
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold">Size</p>
-                  <p className="text-lg font-headline font-bold text-primary">{pet.size}</p>
+                  <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold">Age</p>
+                  <p className="text-lg font-headline font-bold text-primary">{pet.ageInYears}y</p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-border space-y-1 text-center">
                   <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold">Species</p>
@@ -111,7 +122,7 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                 <div className="space-y-4">
                   <h3 className="text-xl font-headline font-bold">Personality Traits</h3>
                   <div className="flex flex-wrap gap-2">
-                    {pet.personalityTraits?.map(trait => (
+                    {pet.personalityTraits?.map((trait: string) => (
                       <Badge key={trait} variant="secondary" className="px-4 py-1.5 text-sm rounded-lg bg-secondary/50 text-primary border-none">
                         {trait}
                       </Badge>
@@ -119,12 +130,12 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-xl font-headline font-bold">Ideal Home</h3>
+                  <h3 className="text-xl font-headline font-bold">Adoption Requirements</h3>
                   <ul className="space-y-2">
-                    {pet.likes?.map(like => (
-                      <li key={like} className="flex items-center gap-2 text-muted-foreground">
+                    {pet.adoptionRequirements?.map((req: string) => (
+                      <li key={req} className="flex items-center gap-2 text-muted-foreground">
                         <CheckCircle2 className="h-4 w-4 text-accent" />
-                        {like}
+                        {req}
                       </li>
                     ))}
                   </ul>
@@ -133,7 +144,6 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
             </div>
           </div>
 
-          {/* Sticky Sidebar (Right col) */}
           <div className="space-y-6">
             <Card className="rounded-3xl border-border shadow-xl overflow-hidden sticky top-24">
               <div className="bg-primary p-8 text-white space-y-2">
@@ -154,30 +164,24 @@ export default function PetDetail({ params }: { params: Promise<{ id: string }> 
                     </div>
                     <span>Vaccinations up to date</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <div className="bg-accent/10 p-2 rounded-lg text-accent">
-                      <CheckCircle2 className="h-4 w-4" />
-                    </div>
-                    <span>Microchipped and registered</span>
-                  </div>
                 </div>
 
                 <Dialog>
-                  <DialogTrigger asChild>
+                  <DialogTrigger asChild disabled={!pet.isAvailable}>
                     <Button className="w-full bg-accent hover:bg-accent/90 text-white h-14 text-lg shadow-lg hover:shadow-accent/20">
-                      Submit Adoption Application
+                      {pet.isAvailable ? "Submit Adoption Application" : "Currently Adopted"}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[500px] rounded-3xl">
                     <DialogHeader>
                       <DialogTitle className="text-2xl font-headline font-bold">Adoption Inquiry</DialogTitle>
                     </DialogHeader>
-                    <AdoptionForm pet={pet} onSuccess={() => setIsApplicationSent(true)} />
+                    <AdoptionForm pet={pet as any} onSuccess={() => setIsApplicationSent(true)} />
                   </DialogContent>
                 </Dialog>
 
                 <p className="text-xs text-muted-foreground text-center">
-                  By applying, you agree to our pet care policies and shelter terms.
+                  By applying, you agree to our pet care policies and sanctuary terms.
                 </p>
               </CardContent>
             </Card>

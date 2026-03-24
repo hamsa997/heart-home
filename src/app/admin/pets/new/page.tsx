@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -31,6 +30,9 @@ import { useToast } from "@/hooks/use-toast";
 import { generatePetDescription } from "@/ai/flows/generate-pet-description";
 import { generatePetImage } from "@/ai/flows/generate-pet-image";
 import Image from "next/image";
+import { useFirestore, setDocumentNonBlocking } from "@/firebase";
+import { doc, collection } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const petFormSchema = z.object({
   name: z.string().min(2),
@@ -49,6 +51,8 @@ const petFormSchema = z.object({
 
 export default function NewPetPage() {
   const { toast } = useToast();
+  const router = useRouter();
+  const db = useFirestore();
   const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
   const [isGeneratingImg, setIsGeneratingImg] = useState(false);
   
@@ -150,11 +154,30 @@ export default function NewPetPage() {
   };
 
   const onSubmit = (values: z.infer<typeof petFormSchema>) => {
-    console.log("Saving pet profile", values);
+    const newPetRef = doc(collection(db, "pets"));
+    const petData = {
+      id: newPetRef.id,
+      name: values.name,
+      species: values.species === "dog" ? "Dog" : "Cat",
+      breed: values.breed || "Mixed",
+      ageInYears: parseInt(values.age) || 0,
+      gender: values.gender,
+      isAvailable: true,
+      description: values.description,
+      personalityTraits: values.personalityTraits.split(",").map(s => s.trim()),
+      adoptionRequirements: values.likes.split(",").map(s => s.trim()),
+      mainPhotoUrl: values.imageUrl,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    setDocumentNonBlocking(newPetRef, petData, { merge: true });
+    
     toast({
       title: "Pet Profile Created!",
       description: `${values.name} has been added to the system.`,
     });
+    router.push("/admin/pets");
   };
 
   return (
@@ -228,8 +251,8 @@ export default function NewPetPage() {
                     name="age"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Age</FormLabel>
-                        <FormControl><Input placeholder="e.g. 3 years or Kitten" {...field} className="rounded-xl h-12" /></FormControl>
+                        <FormLabel>Age (Years)</FormLabel>
+                        <FormControl><Input placeholder="e.g. 3" type="number" {...field} className="rounded-xl h-12" /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -315,8 +338,8 @@ export default function NewPetPage() {
                       name="likes"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Likes</FormLabel>
-                          <FormControl><Input placeholder="Toys, kids, runs..." {...field} className="rounded-xl h-12" /></FormControl>
+                          <FormLabel>Adoption Requirements</FormLabel>
+                          <FormControl><Input placeholder="Fenced yard, patient owner..." {...field} className="rounded-xl h-12" /></FormControl>
                           <FormDescription>Separate by commas</FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -329,7 +352,7 @@ export default function NewPetPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pet Story / Background (Optional)</FormLabel>
-                        <FormControl><Textarea placeholder="Brief anecdote or how they came to the shelter..." className="rounded-2xl min-h-[80px]" {...field} /></FormControl>
+                        <FormControl><Textarea placeholder="Brief anecdote or how they came to the sanctuary..." className="rounded-2xl min-h-[80px]" {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}

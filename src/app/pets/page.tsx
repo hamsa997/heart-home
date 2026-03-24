@@ -2,10 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { Navigation } from "@/components/Navigation";
-import { INITIAL_PETS } from "@/app/lib/mock-data";
 import { PetCard } from "@/components/PetCard";
 import { Input } from "@/components/ui/input";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -13,18 +12,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection } from "firebase/firestore";
 
 export default function PetListing() {
   const [search, setSearch] = useState("");
   const [species, setSpecies] = useState("all");
   const [age, setAge] = useState("all");
 
+  const db = useFirestore();
+  const petsRef = useMemoFirebase(() => collection(db, "pets"), [db]);
+  const { data: pets, isLoading } = useCollection(petsRef);
+
   const filteredPets = useMemo(() => {
-    return INITIAL_PETS.filter(pet => {
+    if (!pets) return [];
+    return pets.filter(pet => {
       const petName = pet.name?.toLowerCase() || "";
       const petBreed = pet.breed?.toLowerCase() || "";
       const petSpecies = pet.species?.toLowerCase() || "";
-      const petAge = pet.age?.toLowerCase() || "";
+      const petAge = pet.age?.toString().toLowerCase() || "";
 
       const matchesSearch = petName.includes(search.toLowerCase()) || 
                            petBreed.includes(search.toLowerCase());
@@ -34,13 +40,11 @@ export default function PetListing() {
       let matchesAge = true;
       if (age !== "all") {
         if (age === "younger") {
-          // Matches kittens, puppies, or 1 year olds
           matchesAge = petAge.includes("kitten") || 
                        petAge.includes("puppy") || 
                        petAge.includes("1 year") ||
                        petAge.includes("month");
         } else if (age === "adult") {
-          // Matches 2+ years or explicitly "adult" or "senior"
           const isOneYear = petAge.includes("1 year");
           matchesAge = (petAge.includes("year") && !isOneYear) || 
                        petAge.includes("adult") || 
@@ -50,7 +54,7 @@ export default function PetListing() {
       
       return matchesSearch && matchesSpecies && matchesAge;
     });
-  }, [search, species, age]);
+  }, [pets, search, species, age]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -62,7 +66,6 @@ export default function PetListing() {
           <p className="text-muted-foreground text-lg">Browse our available pets and find the perfect addition to your family.</p>
         </header>
 
-        {/* Filters Bar */}
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-grow w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -103,16 +106,20 @@ export default function PetListing() {
           </div>
         </div>
 
-        {/* Listing Grid */}
         <div className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold font-headline">{filteredPets.length} pets available</h2>
+            <h2 className="text-xl font-bold font-headline">{isLoading ? "Loading..." : `${filteredPets.length} pets available`}</h2>
           </div>
           
-          {filteredPets.length > 0 ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-24 gap-4">
+              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+              <p className="text-muted-foreground font-medium">Finding our buddies...</p>
+            </div>
+          ) : filteredPets.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPets.map(pet => (
-                <PetCard key={pet.id} pet={pet} />
+                <PetCard key={pet.id} pet={pet as any} />
               ))}
             </div>
           ) : (
