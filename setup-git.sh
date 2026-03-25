@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # This script helps you configure your git remote with a Personal Access Token.

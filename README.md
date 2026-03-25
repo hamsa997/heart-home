@@ -1,3 +1,4 @@
+
 # PetAdopt | Modern P2P Pet Adoption Platform
 
 PetAdopt is a modern, clean, and user-friendly platform designed to connect pet owners directly with potential adopters. It eliminates the middleman, allowing for a heartwarming and transparent adoption journey.
