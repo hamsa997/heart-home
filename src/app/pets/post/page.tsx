@@ -52,7 +52,20 @@ export default function PostPet() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      ownerName: "",
+      ownerEmail: "",
+      ownerPhone: "",
+      city: "",
+      petName: "",
+      type: "",
+      breed: "",
+      age: "",
+      gender: "",
+      color: "",
       vaccinated: false,
+      temperament: "",
+      reasonForRehoming: "",
+      description: "",
       imageUrl: "",
     }
   });
