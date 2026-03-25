@@ -1,6 +1,12 @@
 {
   "placeholderImages": [
     {
+      "id": "hero-pets",
+      "description": "Diverse group of popular pets",
+      "imageUrl": "https://www.shutterstock.com/image-photo/diverse-group-popular-pets-wild-600nw-2716715589.jpg",
+      "imageHint": "pets group"
+    },
+    {
       "id": "pet-golden",
       "description": "Golden Retriever Puppy",
       "imageUrl": "https://picsum.photos/seed/dog-golden-retriever/800/600",

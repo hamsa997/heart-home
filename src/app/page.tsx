@@ -8,11 +8,14 @@ import Link from "next/link";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
 import { collection, query, limit, orderBy } from "firebase/firestore";
 import { PetCard } from "@/components/PetCard";
+import { PlaceHolderImages } from "@/app/lib/placeholder-images";
 
 export default function Home() {
   const db = useFirestore();
   const petsRef = useMemoFirebase(() => query(collection(db, "pets"), orderBy("createdAt", "desc"), limit(4)), [db]);
   const { data: recentPets, isLoading } = useCollection(petsRef);
+
+  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-pets')?.imageUrl || "https://www.shutterstock.com/image-photo/diverse-group-popular-pets-wild-600nw-2716715589.jpg";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -39,15 +42,16 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <div className="rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
+              <div className="rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white bg-white">
                 <Image 
-                  src="https://picsum.photos/seed/happy-dog-hero/800/1000"
-                  alt="Happy pet"
+                  src={heroImage}
+                  alt="Happy group of pets"
                   width={800}
                   height={1000}
                   className="object-cover h-[500px] w-full"
                   priority
-                  data-ai-hint="happy dog"
+                  unoptimized
+                  data-ai-hint="pets group"
                 />
               </div>
             </div>
